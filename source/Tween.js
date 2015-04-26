@@ -35,7 +35,7 @@ Tween.IDLE = 0;
 Tween.RUNNING = 1;
 Tween.COMPLETED = 2;
 
-Tween.prototype._append = function(obj, duration, ease) {
+Tween.prototype._getTween = function(obj, duration, ease) {
 	var last = this.last;
 	var tween = new Tween(obj);
 	tween.start = last.start + last.duration;
@@ -66,7 +66,7 @@ Tween.prototype._getLastParam = function(field) {
  * @returns Tween
  */
 Tween.prototype.add = function(obj) {
-	var tween = this._append(obj, 0, Ease.linear);
+	var tween = this._getTween(obj, 0, Ease.linear);
 	return tween;
 }
 
@@ -79,7 +79,7 @@ Tween.prototype.add = function(obj) {
  * @returns Tween
  */
 Tween.prototype.from = function(props, duration, ease) {
-	var tween = this._append(this.obj, duration, ease);
+	var tween = this._getTween(this.obj, duration, ease);
 	tween.name = 'from';
 	tween.paramsFrom = props;
 	tween.paramsTo = {};
@@ -98,7 +98,7 @@ Tween.prototype.from = function(props, duration, ease) {
  * @returns Tween
  */
 Tween.prototype.to = function(props, duration, ease) {
-	var tween = this._append(this.obj, duration, ease);
+	var tween = this._getTween(this.obj, duration, ease);
 	tween.name = 'to';
 	tween.paramsTo = props;
 	tween.paramsFrom = {};
@@ -116,7 +116,7 @@ Tween.prototype.to = function(props, duration, ease) {
  * @returns Tween
  */
 Tween.prototype.wait = function(duration) {
-	var tween = this._append(this.obj, duration, null);
+	var tween = this._getTween(this.obj, duration, null);
 	tween.name = 'wait';
 	tween.paramsFrom = tween.prev.paramsFrom;
 	tween.paramsTo = tween.prev.paramsTo;
@@ -150,39 +150,6 @@ Tween.prototype.update = function(delta) {
 
 	if (delta) this.time += delta;
 
-	var updateTime = 0;
-
-	// if (!this.reversing) {
-	// 	if (this.time < this.start) {
-	// 		this.state = Tween.IDLE;
-	// 		updateTime = 0;
-	// 	} else if (this.time >= this.start + this.duration) {
-	// 		if (this.state == Tween.RUNNING) this.completed = true;
-	// 		this.state = Tween.COMPLETED;
-	// 		updateTime = this.duration;
-	// 	} else {
-	// 		if (this.state == Tween.IDLE) this.started = true;
-	// 		this.state = 1;
-	// 		updateTime = this.time - this.start;
-	// 		this.updated = true;
-	// 	}
-	// } else {
-	// 	if (this.time > this.start + this.duration) {
-	//     this.state = Tween.IDLE;
-	//     updateTime = this.duration;
-	//   } else if (this.time <= this.start) {
-	//     if (this.state == Tween.RUNNING) this.completed = true;
-	//     this.state = Tween.COMPLETED;
-	//     updateTime = 0;
-	//   } else {
-	//     if (this.state == Tween.IDLE) this.started = true;
-	//     this.state = 1;
-	// 		updateTime = this.time - this.start;
-	//     this.updated = true;
-	//   }
-	// }
-
-
 	if (this.time >= this.start && this.time <= this.start + this.duration) {
 		if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
 		this.state = Tween.RUNNING;
@@ -197,8 +164,8 @@ Tween.prototype.update = function(delta) {
 				if (this.debug) this.log('completed');
 				if (this.onComplete) this.onComplete();
 			}
-			this.state = Tween.IDLE;
 		}
+		this.state = Tween.IDLE;
 	}
 
 	if (this.next) this.next.update(delta);
