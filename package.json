@@ -1,0 +1,24 @@
+{
+  "name": "tweener",
+  "version": "1.0.0",
+  "description": "Just a minimal tween library.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build-debug": "browserify source/tweener.js -o release/tweener.js -d",
+    "build-release": "browserify source/tweener.js | uglifyjs -mc > release/tweener.js",
+    "watch": "watchify source/tweener.js -o release/tweener.js -dv",
+    "lint": "jshint scripts/",
+    "server": "http-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^9.0.8",
+    "http-server": "^0.8.0",
+    "uglify-js": "^2.4.19",
+    "watchify": "^3.1.0"
+  }
+}
