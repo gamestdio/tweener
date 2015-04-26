@@ -11,7 +11,8 @@
     "build-release": "browserify source/tweener.js | uglifyjs -mc > release/tweener.js",
     "watch": "watchify source/tweener.js -o release/tweener.js -dv",
     "lint": "jshint scripts/",
-    "server": "http-server"
+    "server": "http-server",
+    "docs": "jsdoc -c ./docs/docs-config.json -t ~/_RESOURCES/jaguarjs-jsdoc-master -R ./README.md -d ./docs"
   },
   "author": "",
   "license": "ISC",
