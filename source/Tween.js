@@ -152,33 +152,53 @@ Tween.prototype.update = function(delta) {
 
 	var updateTime = 0;
 
-	if (this.time < this.start) {
-    this.state = Tween.IDLE;
-    updateTime = 0;
-  } else if (this.time >= this.start + this.duration) {
-    if (this.state == Tween.RUNNING) this.completed = true;
-    this.state = Tween.COMPLETED;
-    updateTime = this.duration;
-  } else {
-    if (this.state == Tween.IDLE) this.started = true;
-    this.state = 1;
-		updateTime = this.time - this.start;
-    this.updated = true;
-  }
+	// if (!this.reversing) {
+	// 	if (this.time < this.start) {
+	// 		this.state = Tween.IDLE;
+	// 		updateTime = 0;
+	// 	} else if (this.time >= this.start + this.duration) {
+	// 		if (this.state == Tween.RUNNING) this.completed = true;
+	// 		this.state = Tween.COMPLETED;
+	// 		updateTime = this.duration;
+	// 	} else {
+	// 		if (this.state == Tween.IDLE) this.started = true;
+	// 		this.state = 1;
+	// 		updateTime = this.time - this.start;
+	// 		this.updated = true;
+	// 	}
+	// } else {
+	// 	if (this.time > this.start + this.duration) {
+	//     this.state = Tween.IDLE;
+	//     updateTime = this.duration;
+	//   } else if (this.time <= this.start) {
+	//     if (this.state == Tween.RUNNING) this.completed = true;
+	//     this.state = Tween.COMPLETED;
+	//     updateTime = 0;
+	//   } else {
+	//     if (this.state == Tween.IDLE) this.started = true;
+	//     this.state = 1;
+	// 		updateTime = this.time - this.start;
+	//     this.updated = true;
+	//   }
+	// }
 
-	if (this.started) {
-		if (this.debug) this.log('started');
-		this.updateProps(updateTime);
-	}
 
-	if (this.updated) {
-		this.updateProps(updateTime);
-	}
-
-	if (this.completed) {
-		if (this.debug) this.log('completed');
-		this.updateProps(updateTime);
-		if (this.onComplete) this.onComplete();
+	if (this.time >= this.start && this.time <= this.start + this.duration) {
+		if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
+		this.state = Tween.RUNNING;
+		this.updated = true;
+		this.updateProps(this.time - this.start);
+	} else {
+		if (this.state == Tween.RUNNING) {
+			if (this.time < this.start) {
+				this.updateProps(0);
+			} else {
+				this.updateProps(this.duration);
+				if (this.debug) this.log('completed');
+				if (this.onComplete) this.onComplete();
+			}
+			this.state = Tween.IDLE;
+		}
 	}
 
 	if (this.next) this.next.update(delta);
