@@ -6,10 +6,8 @@ var Tween = function(obj) {
 	this.obj = obj;
 
 	this.start = 0;
-  this.end = 0;
   this.duration = 0;
   this.state = 0;
-  this.current = 0;
 
   this.started = false;
   this.updated = false;
@@ -34,9 +32,8 @@ Tween.COMPLETED = 2;
 Tween.prototype._append = function(obj, duration, ease) {
 	var last = this.last;
 	var tween = new Tween(obj);
-	tween.start = last.end;
+	tween.start = last.start + last.duration;
   tween.duration = duration || 0;
-  tween.end = tween.start + tween.duration;
   tween.state = 0;
 	tween.ease = ease;
 	tween.prev = last;
@@ -112,43 +109,44 @@ Tween.prototype.update = function(delta)
 
 	if (delta) this.time += delta;
 
+	var current = 0;
+
 	if (this.time < this.start) {
     this.state = Tween.IDLE;
-    this.current = 0;
-  } else if (this.time >= this.end) {
+    current = 0;
+  } else if (this.time >= this.start + this.duration) {
     if (this.state == Tween.RUNNING) this.completed = true;
     this.state = Tween.COMPLETED;
-    this.current = this.duration;
+    current = this.duration;
   } else {
     if (this.state == Tween.IDLE) this.started = true;
     this.state = 1;
-    this.current = this.time - this.start;
+		current = this.time - this.start;
     this.updated = true;
   }
 
 	if (this.started) {
 		if (this.debug) this.log('started');
-		this.updateProps();
+		this.updateProps(current);
 		if (this.onStart) this.onStart();
 	}
 
 	if (this.updated) {
-		this.updateProps();
+		this.updateProps(current, this.duration);
 	}
 
 	if (this.completed) {
 		if (this.debug) this.log('completed');
-		this.updateProps();
+		this.updateProps(current, this.duration);
 		if (this._onComplete) this._onComplete();
 	}
 
 	if (this.next) this.next.update(delta);
 }
 
-Tween.prototype.updateProps = function() {
+Tween.prototype.updateProps = function(time) {
 	if (!this.ease) return;
-
-	var ratio = this.ease(this.current, 0, 1, this.duration);
+	var ratio = this.ease(time, 0, 1, this.duration);
 	for (var f in this.paramsTo) {
 		var vf = this.paramsFrom[f];
 		var vt = this.paramsTo[f];
