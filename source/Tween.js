@@ -51,10 +51,11 @@ Tween.prototype._append = function(obj, duration, ease) {
 Tween.prototype._getLastParam = function(field) {
 	var ref = this.last.prev;
 	while (ref) {
-		if (ref.obj == this.obj && ref.paramsTo) break;
+		if (ref.obj == this.obj && ref.paramsTo && ref.paramsTo[field] != undefined && ref.paramsTo[field] != null) break;
 		ref = ref.prev;
 	}
 	var v = ref ? ref.paramsTo[field] : this.obj[field];
+	console.log(field, v);
 	return v;
 }
 
@@ -104,6 +105,7 @@ Tween.prototype.to = function(props, duration, ease) {
 	for (var f in props) {
 		tween.paramsFrom[f] = this._getLastParam(f);
 	}
+	console.log('----');
 	return this;
 }
 
