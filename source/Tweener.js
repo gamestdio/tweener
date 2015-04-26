@@ -31,7 +31,7 @@ Tweener.prototype.add = function(obj, name) {
 }
 
 /**
- * Remove all tween instances with have reference to the object.
+ * Remove all tween instances that have reference to the object.
  * @method Tweener#remove
  * @param obj {object} The tweened object.
  */
@@ -40,14 +40,8 @@ Tweener.prototype.remove = function(obj)
 	var i = this.tweens.length;
 	while (i--) {
 		var t = this.tweens[i];
-		if (t.obj === obj) this.destroy(t, i);
+		if (t.obj === obj) this._destroy(t, i);
 	}
-}
-
-Tweener.prototype.destroy = function(tween, i) {
-	if (i == undefined) i = this.tween.indexOf(tween);
-	this.tweens.splice(i, 1);
-	tween.dispose();
 }
 
 /**
@@ -90,8 +84,15 @@ Tweener.prototype.update = function(delta) {
 	while (i--) {
 		var t = this.tweens[i];
 		t.update(delta);
-		if (t.finished()) this.destroy(t, i);
+		if (t.finished()) this._destroy(t, i);
 	}
+}
+
+
+Tweener.prototype._destroy = function(tween, index) {
+	if (index == undefined) index = this.tween.indexOf(tween);
+	this.tweens.splice(index, 1);
+	tween.dispose();
 }
 
 Tweener.prototype.getTime = function() {
