@@ -15,10 +15,6 @@ var Tween = function(obj) {
   this.duration = 0;
   this.state = 0;
 
-  this.started = false;
-  this.updated = false;
-  this.completed = false;
-
 	this.next = null;
 	this.prev = null;
 	this.last = this;
@@ -55,7 +51,6 @@ Tween.prototype._getLastParam = function(field) {
 		ref = ref.prev;
 	}
 	var v = ref ? ref.paramsTo[field] : this.obj[field];
-	console.log(field, v);
 	return v;
 }
 
@@ -105,7 +100,6 @@ Tween.prototype.to = function(props, duration, ease) {
 	for (var f in props) {
 		tween.paramsFrom[f] = this._getLastParam(f);
 	}
-	console.log('----');
 	return this;
 }
 
@@ -144,16 +138,11 @@ Tween.prototype.getTime = function() {
 }
 
 Tween.prototype.update = function(delta) {
-	this.started = false;
-  this.updated = false;
-  this.completed = false;
-
 	if (delta) this.time += delta;
 
 	if (this.time >= this.start && this.time <= this.start + this.duration) {
 		if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
 		this.state = Tween.RUNNING;
-		this.updated = true;
 		this.updateProps(this.time - this.start);
 	} else {
 		if (this.state == Tween.RUNNING) {
@@ -183,7 +172,7 @@ Tween.prototype.updateProps = function(time) {
 }
 
 Tween.prototype.finished = function() {
-	var r = this.state == Tween.COMPLETED;
+	var r = this.time >= this.start + this.duration;
 	if (r && this.next) r = this.next.finished();
 	return r;
 }

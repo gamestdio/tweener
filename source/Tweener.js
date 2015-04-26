@@ -35,8 +35,7 @@ Tweener.prototype.add = function(obj, name) {
  * @method Tweener#remove
  * @param obj {object} The tweened object.
  */
-Tweener.prototype.remove = function(obj)
-{
+Tweener.prototype.remove = function(obj) {
 	var i = this.tweens.length;
 	while (i--) {
 		var t = this.tweens[i];
