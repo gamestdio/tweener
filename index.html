@@ -1,0 +1,98 @@
+<html>
+<head>
+	<title>Tweener</title>
+	<script type="text/javascript" src="../release/tweener.js"></script>
+
+	<style type="text/css">
+		body {
+			margin: 0px;
+		}
+		#canvas {
+			background-color: black;
+		}
+		#slider {
+			width: 99%;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="600", height="300"></canvas>
+	<input id="slider" type="range" name="name" min="0" max="5" step="0.001" value='0'>
+</body>
+<script type="text/javascript">
+
+var slider = document.getElementById("slider");
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var boxA = {name:'boxA', x:0, y:0, w:32, h:32};
+var boxB = {name:'boxB', x:0, y:0, w:32, h:32};
+var boxC = {name:'boxC', x:0, y:0, w:32, h:32};
+var boxD = {name:'boxD', x:0, y:0, w:32, h:32};
+var tweener = new Tweener(1/60);
+var timeline = null;
+
+setInterval(update, 1000/60);
+
+var timeline = new Tween(boxA);
+timeline.to({x:300, y:200}, 1, Ease.outBack)
+timeline.to({y:0}, 1, Ease.inQuart)
+timeline.to({x:200}, 1, Ease.outQuart)
+timeline.to({x:64, y:164}, 1, Ease.outQuart)
+timeline.then(function() {
+	console.log('TIMELINE COMPLETED');
+});
+
+tweener.add(boxB)
+.from({x:330, y:368}, 1, Ease.outQuart)
+.to({x:400, y:100}, 1, Ease.inQuart)
+.wait(0.5)
+.to({x:0, y:68}, 1, Ease.outQuart)
+.wait(0.5)
+.then(function() {
+	console.log('TWEEN 1 COMPLETED!');
+});
+
+tweener.add(boxC)
+.to({x:100}, 1, Ease.outQuart)
+.to({y:100}, 1, Ease.outQuart)
+.to({x:200}, 1, Ease.outQuart)
+.to({y:200}, 1, Ease.outQuart)
+.then(function() {
+	console.log('TWEEN 2 COMPLETED!');
+});
+
+tweener.add(boxD)
+.to({x:300, y:200}, 1, Ease.inQuart)
+.add(boxD)
+.wait(1)
+.to({x:0, y:100}, 1, Ease.outQuart)
+.add(boxC)
+.to({x:32, y:132}, 1, Ease.outQuart)
+.then(function() {
+	console.log('TWEEN 3 COMPLETED!');
+});
+
+
+
+function update()
+{
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	drawRect(boxA, "#FFCC00");
+	drawRect(boxB, "#FF0000");
+	drawRect(boxC, "#FFFFFF");
+	drawRect(boxD, "#00FFFF");
+	if (timeline) {
+		timeline.setTime(parseFloat(slider.value));
+		timeline.update();
+	}
+}
+
+function drawRect(rect, color)
+{
+	ctx.fillStyle = color;
+	ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+}
+
+
+</script>
+</html>

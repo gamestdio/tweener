@@ -9,16 +9,15 @@
   "scripts": {
     "build-debug": "browserify source/tweener.js -o release/tweener.js -d",
     "build-release": "browserify source/tweener.js | uglifyjs -mc > release/tweener.js",
-    "watch": "watchify source/tweener.js -o release/tweener.js -dv",
-    "lint": "jshint scripts/",
-    "server": "http-server",
-    "docs": "jsdoc -c ./docs/docs-config.json -t ~/_RESOURCES/jaguarjs-jsdoc-master -R ./README.md -d ./docs"
+    "start": "watchify source/tweener.js -o release/tweener.js -dv & http-server ./ -s",
+    "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "browserify": "^9.0.8",
     "http-server": "^0.8.0",
+    "jsdocs": "^0.1.0",
     "uglify-js": "^2.4.19",
     "watchify": "^3.1.0"
   }
