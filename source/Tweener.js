@@ -8,11 +8,11 @@ var eases = require('eases');
  * @param [autoUpdateRate] {float} Interval (in seconds) that all tweens will be updated. If 0, the auto-update will not
  * run, so you must handle the update manually. Default is 0.
  */
-function Tweener(autoUpdateRate) {
+var Tweener = function(autoUpdateRate) {
   this.tweens = [];
   this._interval = null;
   if (autoUpdateRate > 0) this.enableAutoUpdate(autoUpdateRate);
-}
+};
 
 /**
  * Create and return a Tween instance with referenced object.
@@ -24,7 +24,7 @@ Tweener.prototype.add = function(obj) {
   var tween = new Tween(obj);
   this.tweens.push(tween);
   return tween;
-}
+};
 
 /**
  * Remove all tween instances that have reference to the object.
@@ -37,7 +37,7 @@ Tweener.prototype.remove = function(obj) {
     var t = this.tweens[i];
     if (t.obj === obj) this._destroy(t, i);
   }
-}
+};
 
 /**
  * Runs the update method automatically.
@@ -59,7 +59,7 @@ Tweener.prototype.enableAutoUpdate = function(rate) {
     time = t;
     self.update(d);
   }, rate*1000);
-}
+};
 
 /**
  * Stops the automatic update.
@@ -67,7 +67,7 @@ Tweener.prototype.enableAutoUpdate = function(rate) {
  */
 Tweener.prototype.disableAutoUpdate = function() {
   clearInterval(this._interval);
-}
+};
 
 /**
  * Update all tweens.
@@ -81,25 +81,22 @@ Tweener.prototype.update = function(delta) {
     t.update(delta);
     if (t.finished()) this._destroy(t, i);
   }
-}
+};
 
 
 Tweener.prototype._destroy = function(tween, index) {
-  if (index == undefined) index = this.tween.indexOf(tween);
+  if (index === undefined) index = this.tween.indexOf(tween);
   this.tweens.splice(index, 1);
   tween.dispose();
-}
+};
 
 Tweener.prototype.getTime = function() {
   return new Date().getTime()/1000;
-}
+};
 
 Tweener.Tween = Tween;
 Tweener.ease = eases;
 
-// export Tweener on the browser
-if (typeof(window)==="object") {
+if (typeof(window) === "object") {
   window.Tweener = Tweener;
 }
-
-module.exports = Tweener;

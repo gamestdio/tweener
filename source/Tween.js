@@ -6,7 +6,7 @@ var eases = require('eases');
  * @constructor
  * @param obj {object} The object that will be tweened.
  */
-function Tween(obj) {
+var Tween = function(obj) {
   this.name = '';
   this.debug = true;
   this.obj = obj;
@@ -25,7 +25,7 @@ function Tween(obj) {
   this.ease = eases.linear;
 
   this.onComplete = null;
-}
+};
 
 Tween.IDLE = 0;
 Tween.RUNNING = 1;
@@ -42,17 +42,17 @@ Tween.prototype._getTween = function(obj, duration, ease) {
   last.next = tween;
   this.last = tween;
   return tween;
-}
+};
 
 Tween.prototype._getLastParam = function(field) {
   var ref = this.last.prev;
   while (ref) {
-    if (ref.obj == this.obj && ref.paramsTo && ref.paramsTo[field] != undefined && ref.paramsTo[field] != null) break;
+    if (ref.obj === this.obj && ref.paramsTo && ref.paramsTo[field] !== undefined && ref.paramsTo[field] !== null) break;
     ref = ref.prev;
   }
   var v = ref ? ref.paramsTo[field] : this.obj[field];
   return v;
-}
+};
 
 /**
  * Adds new tween, with new target.
@@ -63,7 +63,7 @@ Tween.prototype._getLastParam = function(field) {
 Tween.prototype.add = function(obj) {
   var tween = this._getTween(obj, 0, eases.linear);
   return tween;
-}
+};
 
 /**
  * Add a tween that starts with specified values.
@@ -82,7 +82,7 @@ Tween.prototype.from = function(props, duration, ease) {
     tween.paramsTo[f] = this._getLastParam(f);
   }
   return this;
-}
+};
 
 /**
  * Add a tween that ends with specified values.
@@ -101,7 +101,7 @@ Tween.prototype.to = function(props, duration, ease) {
     tween.paramsFrom[f] = this._getLastParam(f);
   }
   return this;
-}
+};
 
 /**
  * Hold the tween for a while before next commands.
@@ -115,7 +115,7 @@ Tween.prototype.wait = function(duration) {
   tween.paramsFrom = tween.prev.paramsFrom;
   tween.paramsTo = tween.prev.paramsTo;
   return this;
-}
+};
 
 /**
  * Set a callback when the previous commands are completed.
@@ -126,16 +126,16 @@ Tween.prototype.wait = function(duration) {
 Tween.prototype.then = function(callback) {
   this.last.onComplete = callback;
   return this;
-}
+};
 
 Tween.prototype.setTime = function(value) {
   this.time = value;
   if (this.next) this.next.setTime(value);
-}
+};
 
 Tween.prototype.getTime = function() {
   return this.time;
-}
+};
 
 Tween.prototype.update = function(delta) {
   if (delta) this.time += delta;
@@ -157,7 +157,7 @@ Tween.prototype.update = function(delta) {
   }
 
   if (this.next) this.next.update(delta);
-}
+};
 
 Tween.prototype.updateProps = function(time) {
   if (!this.ease) return;
@@ -168,13 +168,13 @@ Tween.prototype.updateProps = function(time) {
     var vc = vf + (vt - vf)*ratio;
     this.obj[f] = vc;
   }
-}
+};
 
 Tween.prototype.finished = function() {
   var r = this.time >= this.start + this.duration;
   if (r && this.next) r = this.next.finished();
   return r;
-}
+};
 
 Tween.prototype.dispose = function() {
   if (this.next) this.next.dispose();
@@ -185,10 +185,10 @@ Tween.prototype.dispose = function() {
   this.paramsFrom = null;
   this.paramsTo = null;
   this.onComplete = null;
-}
+};
 
 Tween.prototype.log = function(msg) {
   console.log(this.obj.name, this.name, msg);
-}
+};
 
 module.exports = Tween;
