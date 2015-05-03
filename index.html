@@ -54,14 +54,6 @@ tweener.add(boxB)
 	console.log('TWEEN 1 COMPLETED!');
 });
 
-tweener.add(boxC)
-.to({x:100}, 1, Tweener.ease.quartOut)
-.to({y:100}, 1, Tweener.ease.quartOut)
-.to({x:200}, 1, Tweener.ease.quartOut)
-.to({y:200}, 1, Tweener.ease.quartOut)
-.then(function() {
-	console.log('TWEEN 2 COMPLETED!');
-});
 
 tweener.add(boxD)
 .to({x:300, y:200}, 1, Tweener.ease.quartIn)
