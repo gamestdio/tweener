@@ -19,6 +19,7 @@
     "build-debug": "browserify source/tweener.js -s Tweener -t [ babelify --stage 0 ] -o release/tweener.js -d",
     "build-release": "browserify source/tweener.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > release/tweener.js",
     "start": "watchify source/tweener.js -s Tweener -t [ babelify --stage 0 ] -o release/tweener.js -dv & http-server ./ -s",
+    "server": "http-server ./ -s",
     "test": "mocha tests",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs"
   },

@@ -1,7 +1,7 @@
 <html>
 <head>
 	<title>Tweener</title>
-	<script type="text/javascript" src="../release/tweener.js"></script>
+	<script type="text/javascript" src="release/tweener.js"></script>
 
 	<style type="text/css">
 		body {
@@ -33,41 +33,41 @@ var timeline = null;
 
 setInterval(update, 1000/60);
 
-// var timeline = new Tween(boxA);
-// timeline.to({x:300, y:200}, 1, Ease.outBack)
-// timeline.to({y:0}, 1, Ease.inQuart)
-// timeline.to({x:200}, 1, Ease.outQuart)
-// timeline.to({x:64, y:164}, 1, Ease.outQuart)
-// timeline.then(function() {
-// 	console.log('TIMELINE COMPLETED');
-// });
+var timeline = new Tweener.Tween(boxA);
+timeline.to({x:300, y:200}, 1, Tweener.ease.backOut)
+timeline.to({y:0}, 1, Tweener.ease.quartOut)
+timeline.to({x:200}, 1, Tweener.ease.quartOut)
+timeline.to({x:64, y:164}, 1, Tweener.ease.quartOut)
+timeline.then(function() {
+	console.log('TIMELINE COMPLETED');
+});
 
 tweener.add(boxB)
-.from({x:330, y:368}, 1, Ease.outQuart)
-.to({x:400, y:100}, 1, Ease.inQuart)
+.from({x:330, y:368}, 1, Tweener.ease.quartOut)
+.to({x:400, y:100}, 1, Tweener.ease.quartIn)
 .wait(0.5)
-.to({x:0, y:68}, 1, Ease.outQuart)
+.to({x:0, y:68}, 1, Tweener.ease.quartOut)
 .wait(0.5)
 .then(function() {
 	console.log('TWEEN 1 COMPLETED!');
 });
 
 tweener.add(boxC)
-.to({x:100}, 1, Ease.outQuart)
-.to({y:100}, 1, Ease.outQuart)
-.to({x:200}, 1, Ease.outQuart)
-.to({y:200}, 1, Ease.outQuart)
+.to({x:100}, 1, Tweener.ease.quartOut)
+.to({y:100}, 1, Tweener.ease.quartOut)
+.to({x:200}, 1, Tweener.ease.quartOut)
+.to({y:200}, 1, Tweener.ease.quartOut)
 .then(function() {
 	console.log('TWEEN 2 COMPLETED!');
 });
 
 tweener.add(boxD)
-.to({x:300, y:200}, 1, Ease.inQuart)
+.to({x:300, y:200}, 1, Tweener.ease.quartIn)
 .add(boxD)
 .wait(1)
-.to({x:0, y:100}, 1, Ease.outQuart)
+.to({x:0, y:100}, 1, Tweener.ease.quartOut)
 .add(boxC)
-.to({x:32, y:132}, 1, Ease.outQuart)
+.to({x:32, y:132}, 1, Tweener.ease.quartOut)
 .then(function() {
 	console.log('TWEEN 3 COMPLETED!');
 });

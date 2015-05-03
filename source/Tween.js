@@ -1,4 +1,4 @@
-var Ease = require('./Ease');
+var eases = require('eases');
 
 /**
  * The tween player. Will change target object values with specified parameters.
@@ -22,7 +22,7 @@ function Tween(obj) {
 
   this.paramsFrom = null;
   this.paramsTo = null;
-  this.ease = Ease.linear;
+  this.ease = eases.linear;
 
   this.onComplete = null;
 }
@@ -61,7 +61,7 @@ Tween.prototype._getLastParam = function(field) {
  * @returns Tween
  */
 Tween.prototype.add = function(obj) {
-  var tween = this._getTween(obj, 0, Ease.linear);
+  var tween = this._getTween(obj, 0, eases.linear);
   return tween;
 }
 
@@ -139,7 +139,6 @@ Tween.prototype.getTime = function() {
 
 Tween.prototype.update = function(delta) {
   if (delta) this.time += delta;
-
   if (this.time >= this.start && this.time <= this.start + this.duration) {
     if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
     this.state = Tween.RUNNING;
@@ -162,7 +161,7 @@ Tween.prototype.update = function(delta) {
 
 Tween.prototype.updateProps = function(time) {
   if (!this.ease) return;
-  var ratio = this.ease(time, 0, 1, this.duration);
+  var ratio = this.ease(time/this.duration);
   for (var f in this.paramsTo) {
     var vf = this.paramsFrom[f];
     var vt = this.paramsTo[f];
