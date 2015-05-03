@@ -1,9 +1,4 @@
-var Tweener = require('./Tweener');
-var Tween = require('./Tween');
-var eases = require('eases');
-
-Tweener.Tween = Tween;
-Tweener.ease = eases;
+import Tweener from './Tweener'
 
 if (typeof(window) === "object") {
   window.Tweener = Tweener;

@@ -10,15 +10,15 @@
     "type": "git",
     "url": "git://github.com/maurodetarso/tweener.git"
   },
-  "main": "source/index.js",
+  "main": "dist/tweener.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "dist-debug": "browserify source/index.js -t [ babelify --stage 0 ] -o dist/tweener.js -d",
-    "dist-release": "browserify source/Tweener.js -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
+    "dist-debug": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -d",
+    "dist-release": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
     "dist" : "npm run dist-debug & npm run dist-release",
-    "start": "watchify source/Tweener.js -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
+    "start": "watchify source/index.js -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
     "test": "mocha tests",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs"
   },

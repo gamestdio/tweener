@@ -2,7 +2,7 @@ if (typeof(window)==="object") {
   var assert = chai.assert;
 } else {
   var assert = require('chai').assert;
-  var Tweener = require('../source/Tweener');
+  var Tweener = require('../dist/tweener.js');
 }
 
 describe('Tweener', function(){

@@ -5,7 +5,7 @@
     "Mauro de Tarso <maurodetarso@gmail.com>"
   ],
   "description": "Minimal tweening library",
-  "main": "release/tweener.js",
+  "main": "dist/tweener.min.js",
   "moduleType": [
     "globals",
     "node"
