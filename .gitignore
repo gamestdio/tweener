@@ -2,7 +2,6 @@
 .DS_Store
 docs
 support
-samples
 watch.sh
 node_modules
 npm-debug.log

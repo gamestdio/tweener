@@ -1,0 +1,9 @@
+body {
+  margin: 0px;
+}
+canvas {
+  background-color: black;
+}
+#slider {
+  width: 600px;
+}

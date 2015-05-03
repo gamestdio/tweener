@@ -1,0 +1,113 @@
+<html>
+<head>
+	<title>Tweener</title>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="../dist/tweener.js"></script>
+	<link rel="stylesheet" href="main.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<canvas id="canvas" width="600", height="300"></canvas>
+	<input id="slider" type="range" name="name" min="0" max="5" step="0.001" value='0'>
+</body>
+<script type="text/javascript">
+
+var canvas = new Canvas('canvas');
+
+var boxA = canvas.createRect('boxA');
+var boxB = canvas.createRect('boxB');
+var boxC = canvas.createRect('boxC');
+var boxD = canvas.createRect('boxD');
+var boxE = canvas.createRect('boxE');
+var boxF = canvas.createRect('boxF');
+var boxG = canvas.createRect('boxG');
+var boxH = canvas.createRect('boxH');
+
+var tweener = new Tweener(1/60);
+tweener.debug = true;
+
+tweener.add(boxA)
+	.wait(0.2)
+	.from({x:550}, 0.5, Tweener.ease.quartOut)
+	.to({y:250}, 0.5, Tweener.ease.quartOut)
+	.to({x:550}, 0.5, Tweener.ease.quartOut)
+	.to({y:0}, 0.5, Tweener.ease.quartOut)
+	.to({x:0}, 0.5, Tweener.ease.quartOut)
+	.to({x:100, y:125}, 0.5, Tweener.ease.quartOut)
+	.then(function() {
+		console.log('TWEEN 1 COMPLETED!');
+	});
+
+tweener.add(boxB)
+	.to({x:434, y:43}, 0.5, Tweener.ease.quartIn)
+	.to({x:150, y:125}, 0.5, Tweener.ease.quartOut)
+	.add(boxC)
+	.to({x:23, y:230}, 0.5, Tweener.ease.quartIn)
+	.to({x:200, y:125}, 0.5, Tweener.ease.quartOut)
+	.add(boxD)
+	.to({x:378, y:250}, 0.5, Tweener.ease.quartIn)
+	.to({x:250, y:125}, 0.5, Tweener.ease.quartOut)
+	.then(function() {
+		console.log('TWEEN 2 COMPLETED!');
+	});
+
+tweener.add(boxE)
+	.to({w:600}, 0.3, Tweener.ease.quartOut)
+	.to({x:550, w:50}, 0.3, Tweener.ease.expoOut)
+	.to({h:175}, 0.3, Tweener.ease.sineOut)
+	.to({y:125, h:50}, 0.3, Tweener.ease.quintOut)
+	.to({x:350, w:250}, 0.3, Tweener.ease.cubicOut)
+	.to({w:50}, 0.3, Tweener.ease.sineOut)
+
+tweener.add(boxF)
+	.to({h:300}, 0.3, Tweener.ease.quartOut)
+	.to({h:50, y:250}, 0.3, Tweener.ease.sineOut)
+	.to({w:600}, 0.3, Tweener.ease.quartOut)
+	.to({w:50, x:550}, 0.3, Tweener.ease.sineOut)
+	.to({h:175}, 0.3, Tweener.ease.quartOut)
+	.to({h:50, y:125}, 0.3, Tweener.ease.sineOut)
+	.to({w:150, x:450}, 0.3, Tweener.ease.quartOut)
+	.to({w:50}, 0.3, Tweener.ease.sineOut)
+
+
+//TIMELINE
+
+var slider = new Slider('slider', onSliderUpdate);
+
+var timelineA = new Tweener.Tween(boxG)
+	.to({x:350, y:200}, 1, Tweener.ease.backOut)
+	.wait(0.3)
+	.to({y:0}, 1, Tweener.ease.quartOut)
+	.wait(0.3)
+	.to({x:500}, 1, Tweener.ease.quartOut)
+	.wait(0.3)
+	.to({x:300, y:125}, 1, Tweener.ease.quartOut)
+	.then(function() {
+		console.log('TIMELINE A COMPLETED');
+	});
+
+var timelineB = new Tweener.Tween(boxH)
+	.wait(0.5)
+	.to({h:300}, 0.3, Tweener.ease.quartOut)
+	.to({h:50, y:250}, 0.3, Tweener.ease.sineOut)
+	.to({w:400}, 0.3, Tweener.ease.quartOut)
+	.to({w:50, x:400}, 0.3, Tweener.ease.quartOut)
+	.to({h:175, y:125}, 0.3, Tweener.ease.quartOut)
+	.to({h:50}, 0.3, Tweener.ease.sineOut)
+	.then(function() {
+		console.log('TIMELINE B COMPLETED');
+	});
+
+
+function onSliderUpdate(value) {
+	if (timelineA) {
+		timelineA.setTime(value);
+		timelineA.update();
+	}
+	if (timelineB) {
+		timelineB.setTime(value);
+		timelineB.update();
+	}
+}
+
+</script>
+</html>

@@ -189,7 +189,7 @@ Tween.prototype.dispose = function() {
 };
 
 Tween.prototype.log = function(msg) {
-  if (this.obj.name) console.log(this.obj.name, this.name, msg);
+  if (this.obj.name && this.name) console.log('[Tween]', this.obj.name, this.name, msg);
 };
 
 module.exports = Tween;

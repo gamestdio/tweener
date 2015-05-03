@@ -84,6 +84,14 @@ Tweener.prototype.update = function(delta) {
   }
 };
 
+/**
+ * Destroy Tweener instance.
+ * @method Tweener#dispose
+ */
+Tweener.prototype.dispose = function() {
+  this.tweens = null;
+  this.disableAutoUpdate();
+};
 
 Tweener.prototype._destroy = function(tween, index) {
   if (index === undefined) index = this.tween.indexOf(tween);
