@@ -1,6 +1,6 @@
 {
   "name": "tweener",
-  "version": "0.1.0",
+  "version": "0.1.11",
   "description": "Just a minimal tween library.",
   "author": "Mauro de Tarso <maurodetarso@gmail.com>",
   "contributors": [
@@ -10,13 +10,14 @@
     "type": "git",
     "url": "git://github.com/maurodetarso/tweener.git"
   },
-  "main": "source/Tweener.js",
+  "main": "source/index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "debug": "browserify source/Tweener.js -t [ babelify --stage 0 ] -o dist/tweener.js -d",
-    "release": "browserify source/Tweener.js -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
+    "dist-debug": "browserify source/index.js -t [ babelify --stage 0 ] -o dist/tweener.js -d",
+    "dist-release": "browserify source/Tweener.js -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
+    "dist" : "npm run dist-debug & npm run dist-release",
     "start": "watchify source/Tweener.js -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
     "test": "mocha tests",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs"

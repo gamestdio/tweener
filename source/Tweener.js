@@ -1,5 +1,4 @@
 var Tween = require('./Tween');
-var eases = require('eases');
 
 /**
  * A tween manager. Deals with tween creation, update and destruction.
@@ -9,6 +8,7 @@ var eases = require('eases');
  * run, so you must handle the update manually. Default is 0.
  */
 var Tweener = function(autoUpdateRate) {
+  this.debug = false;
   this.tweens = [];
   this._interval = null;
   if (autoUpdateRate > 0) this.enableAutoUpdate(autoUpdateRate);
@@ -22,6 +22,7 @@ var Tweener = function(autoUpdateRate) {
  */
 Tweener.prototype.add = function(obj) {
   var tween = new Tween(obj);
+  tween.debug = this.debug;
   this.tweens.push(tween);
   return tween;
 };
@@ -94,9 +95,4 @@ Tweener.prototype.getTime = function() {
   return new Date().getTime()/1000;
 };
 
-Tweener.Tween = Tween;
-Tweener.ease = eases;
-
-if (typeof(window) === "object") {
-  window.Tweener = Tweener;
-}
+module.exports = Tweener;

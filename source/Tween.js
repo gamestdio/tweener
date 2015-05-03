@@ -8,7 +8,7 @@ var eases = require('eases');
  */
 var Tween = function(obj) {
   this.name = '';
-  this.debug = true;
+  this.debug = false;
   this.obj = obj;
 
   this.start = 0;
@@ -34,6 +34,7 @@ Tween.COMPLETED = 2;
 Tween.prototype._getTween = function(obj, duration, ease) {
   var last = this.last;
   var tween = new Tween(obj);
+  tween.debug = this.debug;
   tween.start = last.start + last.duration;
   tween.duration = duration || 0;
   tween.state = 0;
@@ -188,7 +189,7 @@ Tween.prototype.dispose = function() {
 };
 
 Tween.prototype.log = function(msg) {
-  console.log(this.obj.name, this.name, msg);
+  if (this.obj.name) console.log(this.obj.name, this.name, msg);
 };
 
 module.exports = Tween;
