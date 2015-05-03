@@ -1,4 +1,4 @@
-#Tweener 0.1#
+#Tweener 0.1 [![Build Status](https://secure.travis-ci.org/endel/tweener.png?branch=master)](https://travis-ci.org/endel/tweener)
 
 Just a minimal tween library.
 
@@ -14,7 +14,7 @@ Just a minimal tween library.
 
 ```javascript
 // Creating a Tweener instance with auto-update of 60 ticks per second.
-// Tweener is not static. Is up to you to handle with the reference: 
+// Tweener is not static. Is up to you to handle with the reference:
 var tweener = new Tweener(1/60);
 
 // Applying a simple tween to the target:
@@ -26,7 +26,7 @@ tweener.remove(target);
 
 ### CHAINING ###
 ```javascript
-// Dispatch a callback after tween completion: 
+// Dispatch a callback after tween completion:
 tweener.add(target).from({x:300, y:200}, 2, Ease.outElastic).then(onCompleteMethod);
 
 // Delaying tween start by 1 second:
@@ -49,7 +49,7 @@ tweener.add(targetA).to({x:300}, 2, Ease.outSine).swap(targetB).to({x:300}, 2, E
 var tweenerA = new Tweener();
 var tweenerB = new Tweener();
 
-// Then, you need to call the update, passing the elapsed time: 
+// Then, you need to call the update, passing the elapsed time:
 tweenerA.update(elapesdTimeInSeconds);
 tweenerB.update(elapesdTimeInMilliseconds);
 

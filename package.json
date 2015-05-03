@@ -1,24 +1,39 @@
 {
   "name": "tweener",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Just a minimal tween library.",
-  "main": "index.js",
+  "author": "Mauro de Tarso <maurodetarso@gmail.com>",
+  "contributors": [
+    "Endel Dreyer <endel.dreyer@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maurodetarso/tweener.git"
+  },
+  "main": "source/Tweener.js",
+  "browser": "release/tweener.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "build-debug": "browserify source/tweener.js -o release/tweener.js -d",
-    "build-release": "browserify source/tweener.js | uglifyjs -mc > release/tweener.js",
-    "start": "watchify source/tweener.js -o release/tweener.js -dv & http-server ./ -s",
+    "build-debug": "browserify source/tweener.js -s Tweener -t [ babelify --stage 0 ] -o release/tweener.js -d",
+    "build-release": "browserify source/tweener.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > release/tweener.js",
+    "start": "watchify source/tweener.js -s Tweener -t [ babelify --stage 0 ] -o release/tweener.js -dv & http-server ./ -s",
+    "test": "mocha tests",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "dependencies": {
+    "eases": "^1.0.6"
+  },
   "devDependencies": {
+    "mocha": "^2.2.4",
+    "chai": "^2.3.0",
     "browserify": "^9.0.8",
+    "babelify": "^6.0.2",
+    "watchify": "^3.1.0",
     "http-server": "^0.8.0",
     "jsdocs": "^0.1.0",
-    "uglify-js": "^2.4.19",
-    "watchify": "^3.1.0"
+    "uglify-js": "^2.4.19"
   }
 }

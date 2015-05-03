@@ -1,0 +1,26 @@
+{
+  "name": "tweener",
+  "version": "0.1.0",
+  "authors": [
+    "Mauro de Tarso <maurodetarso@gmail.com>"
+  ],
+  "description": "Minimal tweening library",
+  "main": "release/tweener.js",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "tween",
+    "tweening"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/maurodetarso/tweener",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
