@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Tweener</title>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="../dist/tweener.js"></script>
+	<link rel="stylesheet" href="main.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<canvas id="canvas" width="600", height="300"></canvas>
+</body>
+<script type="text/javascript">
+
+var canvas = new Canvas('canvas');
+var tweener = new Tweener(1/60);
+
+var amount = 10000;
+while (amount--) {
+	var box = canvas.createRect();
+
+	tweener.add(box)
+		.to(getRandomPos(), Math.random() + 1, Tweener.ease.expoOut)
+		.to(getRandomPos(), Math.random() + 1, Tweener.ease.expoOut)
+		.to(getRandomPos(), Math.random() + 1, Tweener.ease.expoOut)
+		.to(getRandomPos(), Math.random() + 1, Tweener.ease.expoOut);
+}
+
+function getRandomPos() {
+	var x = Math.random()*canvas.width;
+	var y = Math.random()*canvas.height;
+	return {x:x, y:y};
+}
+
+</script>
+</html>

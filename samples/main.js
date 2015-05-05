@@ -33,6 +33,8 @@ var Canvas = function(id) {
   }
 
   this.createRect = createRect;
+  this.width = canvas.width;
+  this.height = canvas.height;
 };
 
 var Slider = function(id, onUpdate) {
