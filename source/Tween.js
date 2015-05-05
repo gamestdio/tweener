@@ -132,8 +132,8 @@ export default class Tween {
   }
 
   setTime(value) {
-    this.time = value;
-    if (this.next) this.next.setTime(value);
+    var delta = value - this.time;
+    this.update(delta);
   }
 
   getTime() {
@@ -142,24 +142,35 @@ export default class Tween {
 
   update(delta) {
     if (delta) this.time += delta;
-    if (this.time >= this.start && this.time <= this.start + this.duration) {
+
+    if (this.next && delta < 0) this.next.update(delta);
+
+    var end = this.start + this.duration;
+    if (this.time >= this.start && this.time <= end) {
       if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
       this.state = Tween.RUNNING;
       this.updateProps(this.time - this.start);
     } else {
-      if (this.state == Tween.RUNNING) {
+      if (this.time > end && this.state == Tween.IDLE) {
+        this.updateProps(this.duration);
+        this.state = Tween.COMPLETED;
+      } else if (this.time < this.start && this.state == Tween.COMPLETED) {
+        this.updateProps(0);
+        this.state = Tween.IDLE;
+      } else if (this.state == Tween.RUNNING) {
         if (this.time < this.start) {
           this.updateProps(0);
+          this.state = Tween.IDLE;
         } else {
           this.updateProps(this.duration);
+          this.state = Tween.COMPLETED;
           if (this.debug) this.log('completed');
           if (this.onComplete) this.onComplete();
         }
       }
-      this.state = Tween.IDLE;
     }
 
-    if (this.next) this.next.update(delta);
+    if (this.next && delta > 0) this.next.update(delta);
   }
 
   updateProps(time) {

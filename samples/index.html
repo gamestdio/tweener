@@ -101,11 +101,9 @@ var timelineB = new Tweener.Tween(boxH)
 function onSliderUpdate(value) {
 	if (timelineA) {
 		timelineA.setTime(value);
-		timelineA.update();
 	}
 	if (timelineB) {
 		timelineB.setTime(value);
-		timelineB.update();
 	}
 }
 

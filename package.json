@@ -17,22 +17,23 @@
   "scripts": {
     "dist-debug": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -d",
     "dist-release": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
-    "dist" : "npm run dist-debug & npm run dist-release",
+    "dist": "npm run dist-debug & npm run dist-release",
     "start": "watchify source/index.js -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
     "test": "mocha tests",
-    "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs"
+    "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs",
+    "jsdoc": "jsdoc ./source/Tweener.js"
   },
   "license": "MIT",
   "dependencies": {
     "eases": "^1.0.6"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "chai": "^2.3.0",
-    "browserify": "^9.0.8",
     "babelify": "^6.0.2",
-    "watchify": "^3.1.0",
-    "jsdocs": "^0.1.0",
-    "uglify-js": "^2.4.19"
+    "browserify": "^9.0.8",
+    "chai": "^2.3.0",
+    "jsdoc": "^3.2.2",
+    "mocha": "^2.2.4",
+    "uglify-js": "^2.4.19",
+    "watchify": "^3.1.0"
   }
 }
