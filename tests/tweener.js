@@ -20,6 +20,26 @@ describe('Tweener', function(){
       tweener.add(target);
       assert.equal(tweener.tweens.length, 1);
     });
+
+    it('should dispacth completion callback', function(){
+      var tweener = new Tweener();
+      var steps = 60;
+      var obj = {x:0};
+      var success = false;
+      tweener.add(obj).to({x:100}, steps, Tweener.ease.linear).then(callback);
+
+      function callback() {
+        success = true;
+      }
+
+      for (var i = 0; i < steps; i++) {
+        tweener.update(1);
+      }
+
+      assert.equal(success, true, 'Failure!');
+
+
+    });
   })
 
 })

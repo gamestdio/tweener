@@ -146,14 +146,16 @@ export default class Tween {
     if (this.next && delta < 0) this.next.update(delta);
 
     var end = this.start + this.duration;
-    if (this.time >= this.start && this.time <= end) {
+    if (this.time >= this.start && this.time < end) {
       if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
       this.state = Tween.RUNNING;
       this.updateProps(this.time - this.start);
     } else {
-      if (this.time > end && this.state == Tween.IDLE) {
+      if (this.time >= end && this.state == Tween.IDLE) {
         this.updateProps(this.duration);
         this.state = Tween.COMPLETED;
+        if (this.debug) this.log('completed');
+        if (this.onComplete) this.onComplete();
       } else if (this.time < this.start && this.state == Tween.COMPLETED) {
         this.updateProps(0);
         this.state = Tween.IDLE;
