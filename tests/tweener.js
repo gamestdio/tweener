@@ -8,24 +8,37 @@ if (typeof(window)==="object") {
 describe('Tweener', function(){
 
   describe('#add()', function(){
-    var target = {x: 0, y: 0};
+    var targetA = {x: 0, y: 0};
+    var targetB = {x: 0, y: 0};
+
     it('should return a Tween instance', function(){
       var tweener = new Tweener();
-      var tween = tweener.add(target);
+      var tween = tweener.add(targetA);
       assert.equal(tween.constructor.name, 'Tween')
     });
 
+
     it('should add a new item into the update list', function(){
       var tweener = new Tweener();
-      tweener.add(target);
+      tweener.add(targetA);
       assert.equal(tweener.tweens.length, 1);
     });
+
+
+    it('should remove all tweens with given target', function(){
+      var tweener = new Tweener();
+      tweener.add(targetA);
+      tweener.add(targetB);
+      tweener.remove(targetA);
+      assert.equal(tweener.tweens.length, 1);
+    });
+
 
     it('should finish with expected value', function(){
       var tweener = new Tweener();
       var targetValue = 100.123;
 
-      tweener.add(target)
+      tweener.add(targetA)
         .to({x:10.1, y:10.2}, 1, Tweener.ease.backOut)
         .to({x:Math.random()*targetValue}, 1, Tweener.ease.quartOut)
         .to({y:Math.random()*targetValue}, 1, Tweener.ease.expoInOut)
@@ -36,18 +49,19 @@ describe('Tweener', function(){
         tweener.update(0.01 + Math.random());
       }
 
-      var success = (target.x === targetValue && target.y === targetValue);
-      assert.equal(success, true);
+      var success = (targetA.x === targetValue && targetA.y === targetValue);
+      assert.equal(success, true, 'finished with x:' + targetA.x + ' and y:' + targetA.y);
     });
+
 
     it('should delete running tween', function(){
       var tweener = new Tweener();
       var steps = 60;
 
-      tweener.add(target).to({x:100}, steps, Tweener.ease.linear);
+      tweener.add(targetA).to({x:100}, steps, Tweener.ease.linear);
       for (var i = 0; i < steps; i++) {
         tweener.update(1);
-        if (i == 30) tweener.remove(target);
+        if (i == 30) tweener.remove(targetA);
       }
 
       assert.equal(tweener.tweens.length, 0);
@@ -57,7 +71,7 @@ describe('Tweener', function(){
       var tweener = new Tweener();
       var steps = 30;
       var success = false;
-      tweener.add(target)
+      tweener.add(targetA)
         .to({x:100}, steps, Tweener.ease.linear)
         .to({x:100}, steps, Tweener.ease.linear)
         .then(callback);
@@ -76,10 +90,10 @@ describe('Tweener', function(){
     it('should dispacth completion deleting himself', function(){
       var tweener = new Tweener();
       var steps = 60;
-      tweener.add(target).to({x:100}, steps, Tweener.ease.linear).then(callback);
+      tweener.add(targetA).to({x:100}, steps, Tweener.ease.linear).then(callback);
 
       function callback() {
-        tweener.remove(target);
+        tweener.remove(targetA);
       }
 
       for (var i = 0; i < steps; i++) {

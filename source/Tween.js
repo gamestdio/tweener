@@ -152,13 +152,13 @@ export default class Tween {
       this.updateProps(this.time - this.start);
     } else if (this.time < this.start) {
       if (this.state !== Tween.IDLE) {
-        this.updateProps(0);
         this.state = Tween.IDLE;
+        this.updateProps(0);
       }
     } else if (this.time >= end) {
       if (this.state !== Tween.COMPLETED) {
-        this.updateProps(this.duration);
         this.state = Tween.COMPLETED;
+        this.updateProps(this.duration);
         if (this.debug) this.log('completed');
         if (this.onComplete) this.onComplete();
       }
@@ -169,12 +169,27 @@ export default class Tween {
 
   updateProps(time) {
     if (!this.ease) return;
-    var ratio = this.ease(time/this.duration);
+
+    var ratio = 0;
+
+    if (this.state === Tween.RUNNING) {
+      ratio = this.ease(time/this.duration);
+    }
+
     for (var f in this.paramsTo) {
-      var vf = this.paramsFrom[f];
-      var vt = this.paramsTo[f];
-      var vc = vf + (vt - vf)*ratio;
-      this.obj[f] = vc;
+      switch (this.state) {
+        case Tween.IDLE :
+          this.obj[f] = this.paramsFrom[f];
+        break;
+        case Tween.COMPLETED :
+          this.obj[f] = this.paramsTo[f];
+        break;
+        default :
+          var vf = this.paramsFrom[f];
+          var vt = this.paramsTo[f];
+          this.obj[f] = vf + (vt - vf)*ratio;
+        break;
+      }
     }
   }
 
