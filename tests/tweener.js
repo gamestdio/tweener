@@ -53,6 +53,22 @@ describe('Tweener', function(){
       assert.equal(success, true, 'finished with x:' + targetA.x + ' and y:' + targetA.y);
     });
 
+    it('should remove all tweens with given target, breaking running tween', function(){
+      var tweener = new Tweener();
+      tweener.add(targetA).to({y:200}, 5);
+      tweener.add(targetA).to({x:100}, 3).then(callback);
+
+      function callback() {
+        tweener.remove(targetA);
+      }
+
+      var steps = 5;
+      for (var i = 0; i < steps; i++) {
+        tweener.update(1);
+      }
+
+      assert.equal(tweener.tweens.length, 0);
+    });
 
     it('should delete running tween', function(){
       var tweener = new Tweener();

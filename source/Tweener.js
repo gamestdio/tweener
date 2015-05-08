@@ -83,8 +83,10 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      t.update(delta);
-      if (t.finished()) this._destroy(t, i);
+      if (t) {
+        t.update(delta);
+        if (t.finished()) this._destroy(t, i);
+      }
     }
   }
 
