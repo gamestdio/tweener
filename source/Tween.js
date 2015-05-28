@@ -194,7 +194,7 @@ export default class Tween {
   }
 
   finished() {
-    var r = this.time >= this.start + this.duration;
+    var r = this.state === Tween.COMPLETE;
     if (r && this.next) r = this.next.finished();
     return r;
   }
