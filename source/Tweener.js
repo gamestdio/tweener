@@ -1,4 +1,5 @@
-import Tween from './Tween'
+import Tween from './Tween';
+import eases from 'eases';
 
 /**
  * A tween manager. Deals with tween creation, update and destruction.
@@ -8,14 +9,14 @@ import Tween from './Tween'
  * run, so you must handle the update manually. Default is 0.
  */
 export default class Tweener {
-  static Tween = Tween;
-  static ease = require('eases');
 
   constructor(autoUpdateRate) {
     this.debug = false;
     this.tweens = [];
     this._interval = null;
-    if (autoUpdateRate > 0) this.enableAutoUpdate(autoUpdateRate);
+    if (autoUpdateRate > 0) {
+      this.enableAutoUpdate(autoUpdateRate);
+    }
   }
 
   /**
@@ -40,7 +41,9 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      if (t.obj === obj) this._destroy(t, i);
+      if (t.obj === obj) {
+        this._destroy(t, i);
+      }
     }
   }
 
@@ -85,7 +88,9 @@ export default class Tweener {
       var t = this.tweens[i];
       if (t) {
         t.update(delta);
-        if (t.finished()) this._destroy(t, i);
+        if (t.finished()) {
+          this._destroy(t, i);
+        }
       }
     }
   }
@@ -100,7 +105,9 @@ export default class Tweener {
   }
 
   _destroy(tween, index) {
-    if (index === undefined) index = this.tween.indexOf(tween);
+    if (index === undefined) {
+      index = this.tween.indexOf(tween);
+    }
     this.tweens.splice(index, 1);
     tween.dispose();
   }
@@ -110,3 +117,6 @@ export default class Tweener {
   }
 
 }
+
+Tweener.Tween = Tween;
+Tweener.ease = eases;

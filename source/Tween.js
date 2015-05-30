@@ -1,5 +1,9 @@
 import {linear} from 'eases';
 
+var IDLE = 0;
+var RUNNING = 1;
+var COMPLETED = 2;
+
 /**
  * The tween player. Will change target object values with specified parameters.
  * @class Tween
@@ -7,10 +11,6 @@ import {linear} from 'eases';
  * @param obj {object} The object that will be tweened.
  */
 export default class Tween {
-
-  static IDLE = 0;
-  static RUNNING = 1;
-  static COMPLETED = 2;
 
   constructor(obj) {
     this.name = '';
@@ -50,7 +50,9 @@ export default class Tween {
   _getLastParam(field) {
     var ref = this.last.prev;
     while (ref) {
-      if (ref.obj === this.obj && ref.paramsTo && ref.paramsTo[field] !== undefined && ref.paramsTo[field] !== null) break;
+      if (ref.obj === this.obj && ref.paramsTo && ref.paramsTo[field] !== undefined && ref.paramsTo[field] !== null) {
+        break;
+      }
       ref = ref.prev;
     }
     var v = ref ? ref.paramsTo[field] : this.obj[field];
@@ -141,13 +143,19 @@ export default class Tween {
   }
 
   update(delta) {
-    if (delta) this.time += delta;
+    if (delta) {
+      this.time += delta;
+    }
 
-    if (this.next && delta < 0) this.next.update(delta);
+    if (this.next && delta < 0) {
+      this.next.update(delta);
+    }
 
     var end = this.start + this.duration;
     if (this.time >= this.start && this.time < end) {
-      if (this.state != Tween.RUNNING) if (this.debug) this.log('started');
+      if (this.state !== Tween.RUNNING && this.debug) {
+        this.log('started');
+      }
       this.state = Tween.RUNNING;
       this.updateProps(this.time - this.start);
     } else if (this.time < this.start) {
@@ -159,16 +167,24 @@ export default class Tween {
       if (this.state !== Tween.COMPLETED) {
         this.state = Tween.COMPLETED;
         this.updateProps(this.duration);
-        if (this.debug) this.log('completed');
-        if (this.onComplete) this.onComplete();
+        if (this.debug) {
+          this.log('completed');
+        }
+        if (this.onComplete) {
+          this.onComplete();
+        }
       }
     }
 
-    if (this.next && delta > 0) this.next.update(delta);
+    if (this.next && delta > 0) {
+      this.next.update(delta);
+    }
   }
 
   updateProps(time) {
-    if (!this.ease) return;
+    if (!this.ease) {
+      return;
+    }
 
     var ratio = 0;
 
@@ -195,13 +211,19 @@ export default class Tween {
 
   finished() {
     var r = this.state === Tween.COMPLETE;
-    if (r && this.next) r = this.next.finished();
+    if (r && this.next) {
+      r = this.next.finished();
+    }
     return r;
   }
 
   dispose() {
-    if (this.next) this.next.dispose();
-    if (this.debug) this.log('disposed!');
+    if (this.next) {
+      this.next.dispose();
+    }
+    if (this.debug) {
+      this.log('disposed!');
+    }
     this.next = null;
     this.prev = null;
     this.last = null;
@@ -211,7 +233,13 @@ export default class Tween {
   }
 
   log(msg) {
-    if (this.obj.name && this.name) console.log('[Tween]', this.obj.name, this.name, msg);
+    if (this.obj.name && this.name) {
+      console.log('[Tween]', this.obj.name, this.name, msg);
+    }
   }
 
 }
+
+Tween.IDLE = IDLE;
+Tween.RUNNING = RUNNING;
+Tween.COMPLETED = COMPLETED;
