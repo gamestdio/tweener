@@ -50,3 +50,41 @@ tweenerB.update(elapesdTimeInMilliseconds);
 tweenerA.add(targetA).to({x:300, y:200}, 0.5, Tweener.ease.backOut); //seconds
 tweenerB.add(targetB).to({x:300, y:200}, 500, Tweener.ease.backOut); //milliseconds
 ```
+
+## Easing functions ##
+
+Here is the list of available easing functions (thanks to [@mattdesl](https://github.com/mattdesl) for his [eases](https://github.com/mattdesl/eases) package):
+
+```javascript
+Tweener.ease.backInOut
+Tweener.ease.backIn
+Tweener.ease.backOut
+Tweener.ease.bounceInOut
+Tweener.ease.bounceIn
+Tweener.ease.bounceOut
+Tweener.ease.circInOut
+Tweener.ease.circIn
+Tweener.ease.circOut
+Tweener.ease.cubicInOut
+Tweener.ease.cubicIn
+Tweener.ease.cubicOut
+Tweener.ease.elasticInOut
+Tweener.ease.elasticIn
+Tweener.ease.elasticOut
+Tweener.ease.expoInOut
+Tweener.ease.expoIn
+Tweener.ease.expoOut
+Tweener.ease.linear
+Tweener.ease.quadInOut
+Tweener.ease.quadIn
+Tweener.ease.quadOut
+Tweener.ease.quartInOut
+Tweener.ease.quartIn
+Tweener.ease.quartOut
+Tweener.ease.quintInOut
+Tweener.ease.quintIn
+Tweener.ease.quintOut
+Tweener.ease.sineInOut
+Tweener.ease.sineIn
+Tweener.ease.sineOut
+```
