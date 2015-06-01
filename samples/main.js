@@ -5,9 +5,9 @@ var Canvas = function(id) {
   var rects = [];
   setInterval(update, 1000/60);
 
-  function createRect(name) {
+  function createRect(name, color) {
     var hex = Math.floor(Math.random()*0xFFFFFF);
-    var color = '#' + hex.toString(16);
+    var color = color || '#' + hex.toString(16);
     var rect = {
       x:0,
       y:0,
