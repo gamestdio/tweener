@@ -169,7 +169,7 @@ export default class Tween {
   }
 
   finished() {
-    var r = this.state === Tween.COMPLETE;
+    var r = this.state === Tween.COMPLETED;
     if (r && this.next) {
       r = this.next.finished();
     }

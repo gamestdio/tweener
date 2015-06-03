@@ -2,12 +2,33 @@ import Tween from './Tween';
 import eases from 'eases';
 
 export default class Tweener {
-  constructor(autoUpdateRate) {
+  constructor(autoUpdateRate = 0) {
     this.debug = false;
     this.tweens = [];
+    this._autoUpdateRate = 0;
     this._interval = null;
-    if (autoUpdateRate > 0) {
-      this.enableAutoUpdate(autoUpdateRate);
+    this.autoUpdateRate = autoUpdateRate;
+  }
+
+  get autoUpdateRate() {
+    return this._autoUpdateRate;
+  }
+
+  set autoUpdateRate(value) {
+    clearInterval(this._interval);
+    if (value <= 0) {
+      this._interval = null;
+      this._autoUpdateRate = 0;
+    } else {
+      this._autoUpdateRate = value;
+      var self = this;
+      var time = self.getTime();
+      self._interval = setInterval(function() {
+        var t = self.getTime();
+        var d = t - time;
+        time = t;
+        self.update(d);
+      }, value*1000);
     }
   }
 
@@ -28,26 +49,6 @@ export default class Tweener {
     }
   }
 
-  enableAutoUpdate(rate) {
-    if (!rate) {
-      this.disableAutoUpdate();
-      return;
-    }
-
-    var self = this;
-    var time = self.getTime();
-    self._interval = setInterval(function() {
-      var t = self.getTime();
-      var d = t - time;
-      time = t;
-      self.update(d);
-    }, rate*1000);
-  }
-
-  disableAutoUpdate() {
-    clearInterval(this._interval);
-  }
-
   update(delta) {
     var i = this.tweens.length;
     while (i--) {
@@ -62,8 +63,8 @@ export default class Tweener {
   }
 
   dispose() {
+    this.autoUpdateRate = 0;
     this.tweens = null;
-    this.disableAutoUpdate();
   }
 
   _destroy(tween, index) {
