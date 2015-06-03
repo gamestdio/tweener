@@ -1,0 +1,75 @@
+<html>
+<head>
+	<title>Tweener</title>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="../dist/tweener.js"></script>
+	<link rel="stylesheet" href="main.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<canvas id="canvas" width="600", height="300"></canvas>
+</body>
+<script type="text/javascript">
+
+function getTime() {
+  return new Date().getTime();
+}
+
+var canvas = new Canvas('canvas');
+
+var boxA = canvas.createRect('boxA', '#FFFF00');
+var boxB = canvas.createRect('boxB', '#FFAA00');
+var boxC = canvas.createRect('boxC', '#FF0000');
+
+var tweenerA = new Tweener();
+tweenerA.debug = true;
+
+var tweenerB = new Tweener();
+tweenerB.debug = true;
+
+var tweenerC = new Tweener();
+tweenerC.debug = true;
+
+updateByMilliseconds(tweenerA);
+updateBySeconds(tweenerB);
+updateByFrames(tweenerC);
+
+function updateByMilliseconds(tweener) {
+  var t = getTime();
+  setInterval(function() {
+    var delta = getTime() - t;
+    tweener.update(delta);
+    t += delta;
+  }, 1000/60);
+}
+
+function updateBySeconds(tweener) {
+  var t = getTime()/1000;
+  setInterval(function() {
+    var delta = getTime()/1000 - t;
+    tweener.update(delta);
+    t += delta;
+  }, 1000/60);
+}
+
+function updateByFrames(tweener) {
+  requestAnimationFrame(update);
+  function update() {
+    tweener.update(1);
+    requestAnimationFrame(update);
+  }
+}
+
+tweenerA.add(boxA, 'boxA')
+	.wait(1000)
+	.to({x:100, y:125}, 500, Tweener.ease.quartOut);
+
+tweenerB.add(boxB, 'boxB')
+	.wait(1)
+	.to({x:200, y:125}, 0.5, Tweener.ease.quartOut);
+
+tweenerC.add(boxC, 'boxC')
+	.wait(60)
+	.to({x:300, y:125}, 60*0.5, Tweener.ease.quartOut);
+
+</script>
+</html>
