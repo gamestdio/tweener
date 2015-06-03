@@ -4,14 +4,7 @@ var IDLE = 0;
 var RUNNING = 1;
 var COMPLETED = 2;
 
-/**
- * The tween player. Will change target object values with specified parameters.
- * @class Tween
- * @constructor
- * @param obj {object} The object that will be tweened.
- */
 export default class Tween {
-
   constructor(obj) {
     this.name = '';
     this.debug = false;
@@ -59,25 +52,11 @@ export default class Tween {
     return v;
   }
 
-  /**
-   * Adds new tween, with new target.
-   * @method Tween#add
-   * @param obj {object} The object that will be tweened.
-   * @returns Tween
-   */
   add(obj) {
     var tween = this._getTween(obj, 0, linear);
     return tween;
   }
 
-  /**
-   * Add a tween that starts with specified values.
-   * @method Tween#from
-   * @param props {object} Values that the tween will come from.
-   * @param duration {float} Tween's duration.
-   * @param [ease] {function} Tween's easing curve.
-   * @returns Tween
-   */
   from(props, duration, ease) {
     var tween = this._getTween(this.obj, duration, ease);
     tween.name = 'from';
@@ -89,14 +68,6 @@ export default class Tween {
     return this;
   }
 
-  /**
-   * Add a tween that ends with specified values.
-   * @method Tween#to
-   * @param props {object} Values that the tween will go to.
-   * @param duration {float} Tween's duration.
-   * @param [ease] {function} Tween's easing curve.
-   * @returns Tween
-   */
   to(props, duration, ease) {
     var tween = this._getTween(this.obj, duration, ease);
     tween.name = 'to';
@@ -108,12 +79,6 @@ export default class Tween {
     return this;
   }
 
-  /**
-   * Hold the tween for a while before next commands.
-   * @method Tween#wait
-   * @param duration {float} Time to wait.
-   * @returns Tween
-   */
   wait(duration) {
     var tween = this._getTween(this.obj, duration, null);
     tween.name = 'wait';
@@ -122,12 +87,6 @@ export default class Tween {
     return this;
   }
 
-  /**
-   * Set a callback when the previous commands are completed.
-   * @method Tween#then
-   * @param callback {function} Method tha will be executed as callback.
-   * @returns Tween
-   */
   then(callback) {
     this.last.onComplete = callback;
     return this;
