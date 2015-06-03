@@ -1,6 +1,6 @@
 {
   "name": "tweener",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "Just a minimal tween library.",
   "author": "Mauro de Tarso <maurodetarso@gmail.com>",
   "contributors": [
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git://github.com/maurodetarso/tweener.git"
   },
-  "main": "dist/tweener.min.js",
+  "main": "dist/tweener.js",
   "directories": {
     "doc": "docs"
   },
