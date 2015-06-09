@@ -18,6 +18,7 @@ export default class Tween {
     this.next = null;
     this.prev = null;
     this.last = this;
+
     this.time = 0;
     this.lastEvaluationTime = -1;
 
@@ -238,6 +239,7 @@ export default class Tween {
     if (this.debug) {
       this.log('disposed!');
     }
+    this.obj = null
     this.next = null;
     this.prev = null;
     this.last = null;

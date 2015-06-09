@@ -44,7 +44,7 @@ export default class Tweener {
     while (i--) {
       var t = this.tweens[i];
       if (t.obj === obj) {
-        this._destroy(t, i);
+        this.disposeTween(t, i);
       }
     }
   }
@@ -53,21 +53,25 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      if (t) {
-        t.update(delta);
-        if (t.finished()) {
-          this._destroy(t, i);
-        }
+      t.update(delta);
+      if (t.finished()) {
+        this.disposeTween(t, i);
       }
     }
   }
 
   dispose() {
+    clearInterval(this._interval);
+    var i = this.tweens.length;
+    while (i--) {
+      var t = this.tweens[i];
+      this.disposeTween(t, i);
+    }
     this.autoUpdateRate = 0;
     this.tweens = null;
   }
 
-  _destroy(tween, index) {
+  disposeTween(tween, index) {
     if (index === undefined) {
       index = this.tween.indexOf(tween);
     }

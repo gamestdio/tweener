@@ -1,4 +1,4 @@
-if (typeof(window)==="object") {
+if (typeof(window) === 'object') {
   var assert = chai.assert;
 } else {
   var assert = require('chai').assert;
@@ -85,14 +85,14 @@ describe('Tweener', function(){
     var tweener = new Tweener();
 
     it('should remove a Tween instance', function(){
-      var tweenA = tweener.add(objA);
+      tweener.add(objA);
       tweener.remove(objA);
       assert.equal(tweener.tweens[0], undefined);
       assert.equal(tweener.tweens.length, 0);
     });
 
     it('should remove the right Tween instance', function(){
-      var tweenA = tweener.add(objA);
+      tweener.add(objA);
       var tweenB = tweener.add(objB);
       tweener.remove(objA);
       assert.equal(tweener.tweens[0], tweenB);
@@ -112,7 +112,6 @@ describe('Tweener', function(){
 
   describe('#update()', function(){
     var objA = {x: 0, y: 0};
-    var objB = {x: 0, y: 0};
     var tweener = new Tweener();
 
     it('should update correctly', function(){
@@ -122,11 +121,35 @@ describe('Tweener', function(){
     });
 
     it('should update added tweens', function(){
-      var tweenA = tweener.add(objA);
+      tweener.add(objA);
       tweener.update(1);
       assert.equal(tweener.tweens[0], undefined);
       assert.equal(tweener.tweens.length, 0);
     });
   });
 
-})
+  describe('#dispose()', function(){
+    var objA = {x: 0, y: 0};
+    var objB = {x: 0, y: 0};
+
+    it('should dispose correctly', function(){
+      var tweener = new Tweener(1/60);
+      tweener.dispose();
+      assert.equal(tweener.tweens, null);
+      assert.equal(tweener._interval, null);
+    });
+
+    it('should dispose all internal tweens', function(){
+      var tweener = new Tweener();
+      var tweenA = tweener.add(objA);
+      var tweenB = tweener.add(objB);
+      tweener.dispose();
+      assert.equal(tweener.tweens, null);
+      assert.equal(tweener._interval, null);
+      assert.equal(tweenA.obj, null);
+      assert.equal(tweenB.obj, null);
+    });
+  });
+
+
+});
