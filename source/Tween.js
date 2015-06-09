@@ -1,8 +1,9 @@
 import {linear} from 'eases';
 
-var IDLE = 0;
-var RUNNING = 1;
-var COMPLETED = 2;
+const UNDEFINED = 0;
+const BEFORE = 1;
+const RUNNING = 2;
+const AFTER = 3;
 
 export default class Tween {
   constructor(obj) {
@@ -10,7 +11,7 @@ export default class Tween {
     this.debug = false;
     this.obj = obj;
 
-    this.start = 0;
+    this.position = 0;
     this.duration = 0;
     this.state = 0;
 
@@ -18,11 +19,13 @@ export default class Tween {
     this.prev = null;
     this.last = this;
     this.time = 0;
+    this.lastEvaluationTime = -1;
 
-    this.paramsFrom = null;
-    this.paramsTo = null;
+    this.pf = null;
+    this.pt = null;
     this.ease = linear;
 
+    this.onStart = null;
     this.onComplete = null;
   }
 
@@ -30,7 +33,7 @@ export default class Tween {
     var last = this.last;
     var tween = new Tween(obj);
     tween.debug = this.debug;
-    tween.start = last.start + last.duration;
+    tween.position = last.position + last.duration;
     tween.duration = duration || 0;
     tween.state = 0;
     tween.ease = ease;
@@ -43,12 +46,12 @@ export default class Tween {
   _getLastParam(field) {
     var ref = this.last.prev;
     while (ref) {
-      if (ref.obj === this.obj && ref.paramsTo && ref.paramsTo[field] !== undefined && ref.paramsTo[field] !== null) {
+      if (ref.obj === this.obj && ref.pt && ref.pt[field] !== undefined && ref.pt[field] !== null) {
         break;
       }
       ref = ref.prev;
     }
-    var v = ref ? ref.paramsTo[field] : this.obj[field];
+    var v = ref ? ref.pt[field] : this.obj[field];
     return v;
   }
 
@@ -60,10 +63,10 @@ export default class Tween {
   from(props, duration, ease) {
     var tween = this._getTween(this.obj, duration, ease);
     tween.name = 'from';
-    tween.paramsFrom = props;
-    tween.paramsTo = {};
+    tween.pf = props;
+    tween.pt = {};
     for (var f in props) {
-      tween.paramsTo[f] = this._getLastParam(f);
+      tween.pt[f] = this._getLastParam(f);
     }
     return this;
   }
@@ -71,10 +74,10 @@ export default class Tween {
   to(props, duration, ease) {
     var tween = this._getTween(this.obj, duration, ease);
     tween.name = 'to';
-    tween.paramsTo = props;
-    tween.paramsFrom = {};
+    tween.pt = props;
+    tween.pf = {};
     for (var f in props) {
-      tween.paramsFrom[f] = this._getLastParam(f);
+      tween.pf[f] = this._getLastParam(f);
     }
     return this;
   }
@@ -82,8 +85,8 @@ export default class Tween {
   wait(duration) {
     var tween = this._getTween(this.obj, duration, null);
     tween.name = 'wait';
-    tween.paramsFrom = tween.prev.paramsFrom;
-    tween.paramsTo = tween.prev.paramsTo;
+    tween.pf = tween.prev.pf;
+    tween.pt = tween.prev.pt;
     return this;
   }
 
@@ -110,66 +113,118 @@ export default class Tween {
       this.next.update(delta);
     }
 
-    var end = this.start + this.duration;
-    if (this.time >= this.start && this.time < end) {
-      if (this.state !== Tween.RUNNING && this.debug) {
-        this.log('started');
-      }
-      this.state = Tween.RUNNING;
-      this.updateProps(this.time - this.start);
-    } else if (this.time < this.start) {
-      if (this.state !== Tween.IDLE) {
-        this.state = Tween.IDLE;
-        this.updateProps(0);
-      }
-    } else if (this.time >= end) {
-      if (this.state !== Tween.COMPLETED) {
-        this.state = Tween.COMPLETED;
-        this.updateProps(this.duration);
-        if (this.debug) {
-          this.log('completed');
+    if (this.time !== this.lastEvaluationTime) {
+      var time = this.time;
+      var pos = this.position;
+      var dur = this.duration;
+      var lastState = this.state;
+      var state = Tween.getState(pos, dur, time);
+
+      if (lastState === UNDEFINED) {
+        if (time > this.lastEvaluationTime) {
+          switch (state) {
+            case RUNNING :
+              this.notifyStart();
+              this.process(time - pos);
+            break;
+            case AFTER :
+              this.notifyStart();
+              this.process(dur);
+              this.notifyComplete();
+            break;
+          }
+        } else {
+          switch (state) {
+            case RUNNING :
+              this.notifyComplete();
+              this.process(time - pos);
+            break;
+            case BEFORE :
+              this.notifyComplete();
+              this.process(0);
+              this.notifyStart();
+            break;
+          }
         }
-        if (this.onComplete) {
-          this.onComplete();
+      } else {
+        switch (state) {
+          case BEFORE :
+            if (lastState !== BEFORE) {
+              this.process(0);
+              this.notifyStart();
+            }
+          break;
+          case RUNNING :
+            if (lastState === BEFORE) {
+              this.notifyStart();
+            } else if (lastState === AFTER) {
+              this.notifyComplete();
+            }
+            this.process(time - pos);
+          break;
+          case AFTER :
+            if (lastState !== AFTER) {
+              this.process(dur);
+              this.notifyComplete();
+            }
+          break;
         }
       }
+
+      this.lastEvaluationTime = time;
+      this.state = state;
     }
+
 
     if (this.next && delta > 0) {
       this.next.update(delta);
     }
   }
 
-  updateProps(time) {
-    if (!this.ease) {
+  process(time) {
+    if (!this.ease || this.duration === 0) {
       return;
     }
 
-    var ratio = 0;
+    var ratio = this.ease(time/this.duration);
 
-    if (this.state === Tween.RUNNING) {
-      ratio = this.ease(time/this.duration);
-    }
-
-    for (var f in this.paramsTo) {
-      switch (this.state) {
-        case Tween.IDLE :
-          this.obj[f] = this.paramsFrom[f];
+    for (var f in this.pt) {
+      switch (ratio) {
+        case 0 :
+          this.obj[f] = this.pf[f];
         break;
-        case Tween.COMPLETED :
-          this.obj[f] = this.paramsTo[f];
+        case 1 :
+          this.obj[f] = this.pt[f];
         break;
         default :
-          var vf = this.paramsFrom[f];
-          var vt = this.paramsTo[f];
+          var vf = this.pf[f];
+          var vt = this.pt[f];
           this.obj[f] = vf + (vt - vf)*ratio;
         break;
       }
     }
   }
 
+  notifyStart() {
+    if (this.debug) {
+      this.log('start');
+    }
+    if (this.onStart) {
+      this.onStart();
+    }
+  }
+
+  notifyComplete() {
+    if (this.debug) {
+      this.log('complete');
+    }
+    if (this.onComplete) {
+      this.onComplete();
+    }
+  }
+
   finished() {
-    var r = this.state === Tween.COMPLETED;
+    var r = this.state === AFTER;
     if (r && this.next) {
       r = this.next.finished();
     }
@@ -186,8 +241,9 @@ export default class Tween {
     this.next = null;
     this.prev = null;
     this.last = null;
-    this.paramsFrom = null;
-    this.paramsTo = null;
+    this.pf = null;
+    this.pt = null;
+    this.onStart = null;
     this.onComplete = null;
   }
 
@@ -197,8 +253,21 @@ export default class Tween {
     }
   }
 
+  static getState(pos, dur, time) {
+    var end = pos + dur;
+    var state = UNDEFINED;
+    if (time < pos) {
+      state = BEFORE;
+    } else if (time >= end) {
+      state = AFTER;
+    } else {
+      state = RUNNING;
+    }
+    return state;
+  }
 }
 
-Tween.IDLE = IDLE;
+Tween.UNDEFINED = UNDEFINED;
+Tween.BEFORE = BEFORE;
 Tween.RUNNING = RUNNING;
-Tween.COMPLETED = COMPLETED;
+Tween.AFTER = AFTER;

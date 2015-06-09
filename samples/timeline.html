@@ -1,0 +1,42 @@
+<html>
+<head>
+	<title>Tweener</title>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="../dist/tweener.js"></script>
+	<link rel="stylesheet" href="main.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<canvas id="canvas" width="600", height="300"></canvas>
+  <div>
+    <input id="slider" type="range" name="name" min="0" max="5" step="0.001" value='0'>
+  </div>
+</body>
+<script type="text/javascript">
+
+var canvas = new Canvas('canvas');
+var slider = new Slider('slider', onSliderUpdate);
+
+var boxA = canvas.createRect('boxA');
+var boxB = canvas.createRect('boxB');
+
+var timeline = new Tweener.Tween(boxA);
+timeline.debug = true;
+timeline
+	.to({x:350, y:200}, 1, Tweener.ease.backOut)
+	.wait(0.3)
+	.to({y:0}, 1, Tweener.ease.quartOut)
+	.wait(0.3)
+	.to({x:500}, 1, Tweener.ease.quartOut)
+	.wait(0.3)
+	.to({x:300, y:125}, 1, Tweener.ease.quartOut)
+	.then(function() {
+		console.log('TIMELINE COMPLETED');
+	});
+
+
+function onSliderUpdate(value) {
+  timeline.setTime(value);
+}
+
+</script>
+</html>

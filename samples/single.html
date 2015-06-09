@@ -1,0 +1,28 @@
+<html>
+<head>
+	<title>Tweener</title>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="../dist/tweener.js"></script>
+	<link rel="stylesheet" href="main.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<canvas id="canvas" width="600", height="300"></canvas>
+</body>
+<script type="text/javascript">
+
+var canvas = new Canvas('canvas');
+var boxA = canvas.createRect('boxA');
+var tweener = new Tweener(1/60);
+tweener.debug = true;
+
+tweener.add(boxA)
+	.wait(0.5)
+	.from({x:550}, 0.5, Tweener.ease.quartOut)
+	.to({x:100, y:125}, 0.5, Tweener.ease.quartOut)
+	.then(function() {
+		console.log('TWEEN 1 COMPLETED!');
+	});
+
+
+</script>
+</html>
