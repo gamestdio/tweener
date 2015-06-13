@@ -6,9 +6,9 @@ const RUNNING = 2;
 const AFTER = 3;
 
 export default class Tween {
-  constructor(obj) {
-    this.name = '';
-    this.debug = false;
+  constructor(obj, debug = false, name = '') {
+    this.name = name;
+    this.debug = debug;
     this.obj = obj;
 
     this.position = 0;
@@ -28,12 +28,15 @@ export default class Tween {
 
     this.onStart = null;
     this.onComplete = null;
+
+    if (this.debug) {
+      this.log('created');
+    }
   }
 
-  _getTween(obj, duration, ease) {
+  _getTween(obj, duration, ease, name = '') {
     var last = this.last;
-    var tween = new Tween(obj);
-    tween.debug = this.debug;
+    var tween = new Tween(obj, this.debug, name);
     tween.position = last.position + last.duration;
     tween.duration = duration || 0;
     tween.state = 0;
@@ -41,6 +44,11 @@ export default class Tween {
     tween.prev = last;
     last.next = tween;
     this.last = tween;
+
+    if (this.debug) {
+      this.log('added: ' + name);
+    }
+
     return tween;
   }
 
@@ -62,8 +70,7 @@ export default class Tween {
   }
 
   from(props, duration, ease) {
-    var tween = this._getTween(this.obj, duration, ease);
-    tween.name = 'from';
+    var tween = this._getTween(this.obj, duration, ease, 'from');
     tween.pf = props;
     tween.pt = {};
     for (var f in props) {
@@ -73,8 +80,7 @@ export default class Tween {
   }
 
   to(props, duration, ease) {
-    var tween = this._getTween(this.obj, duration, ease);
-    tween.name = 'to';
+    var tween = this._getTween(this.obj, duration, ease, 'to');
     tween.pt = props;
     tween.pf = {};
     for (var f in props) {
@@ -84,8 +90,7 @@ export default class Tween {
   }
 
   wait(duration) {
-    var tween = this._getTween(this.obj, duration, null);
-    tween.name = 'wait';
+    var tween = this._getTween(this.obj, duration, null, 'wait');
     tween.pf = tween.prev.pf;
     tween.pt = tween.prev.pt;
     return this;
@@ -237,9 +242,9 @@ export default class Tween {
       this.next.dispose();
     }
     if (this.debug) {
-      this.log('disposed!');
+      this.log('DISPOSED!');
     }
-    this.obj = null
+    this.obj = null;
     this.next = null;
     this.prev = null;
     this.last = null;
@@ -250,8 +255,14 @@ export default class Tween {
   }
 
   log(msg) {
-    if (this.obj.name && this.name) {
-      console.log('[Tween]', this.obj.name, this.name, msg);
+    if (this.debug) {
+      if (this.obj.name) {
+        console.log('[Tween]', this.obj.name, this.name, msg);
+      } else if (this.name) {
+        console.log('[Tween]', this.name, msg);
+      } else {
+        console.log('[Tween]', msg);
+      }
     }
   }
 

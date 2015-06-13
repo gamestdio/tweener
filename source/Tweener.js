@@ -10,6 +10,12 @@ export default class Tweener {
     this.autoUpdateRate = autoUpdateRate;
   }
 
+  dispose() {
+    clearInterval(this._interval);
+    this.autoUpdateRate = 0;
+    this.tweens = null;
+  }
+
   get autoUpdateRate() {
     return this._autoUpdateRate;
   }
@@ -32,9 +38,8 @@ export default class Tweener {
     }
   }
 
-  add(obj) {
-    var tween = new Tween(obj);
-    tween.debug = this.debug;
+  add(obj, debug = false, name = '') {
+    var tween = new Tween(obj, debug, name);
     this.tweens.push(tween);
     return tween;
   }
@@ -44,7 +49,8 @@ export default class Tweener {
     while (i--) {
       var t = this.tweens[i];
       if (t.obj === obj) {
-        this.disposeTween(t, i);
+        this.tweens.splice(i, 1);
+        t.dispose();
       }
     }
   }
@@ -53,30 +59,15 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      t.update(delta);
-      if (t.finished()) {
-        this.disposeTween(t, i);
+      if (t) {
+        if (t.finished()) {
+          this.tweens.splice(i, 1);
+          t.dispose();
+        } else {
+          t.update(delta);
+        }
       }
     }
-  }
-
-  dispose() {
-    clearInterval(this._interval);
-    var i = this.tweens.length;
-    while (i--) {
-      var t = this.tweens[i];
-      this.disposeTween(t, i);
-    }
-    this.autoUpdateRate = 0;
-    this.tweens = null;
-  }
-
-  disposeTween(tween, index) {
-    if (index === undefined) {
-      index = this.tween.indexOf(tween);
-    }
-    this.tweens.splice(index, 1);
-    tween.dispose();
   }
 
   getTime() {
