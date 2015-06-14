@@ -13,6 +13,13 @@ export default class Tweener {
   dispose() {
     clearInterval(this._interval);
     this.autoUpdateRate = 0;
+    var i = this.tweens.length;
+    while (i--) {
+      var t = this.tweens[i];
+      if (t) {
+        t.dispose();
+      }
+    }
     this.tweens = null;
   }
 

@@ -123,7 +123,15 @@ describe('Tweener', function(){
     it('should update added tweens', function(){
       tweener.add(objA);
       tweener.update(1);
-      assert.equal(tweener.tweens[0], undefined);
+      assert.equal(tweener.tweens[0].obj, objA);
+      assert.equal(tweener.tweens.length, 1);
+    });
+
+    it('should update and remove finished tweens', function(){
+      tweener.add(objA);
+      tweener.update(1);
+      tweener.update(1);
+      assert.equal(tweener.tweens[0], null);
       assert.equal(tweener.tweens.length, 0);
     });
   });
