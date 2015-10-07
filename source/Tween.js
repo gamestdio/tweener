@@ -22,8 +22,8 @@ export default class Tween {
     this.time = 0;
     this.lastEvaluationTime = -1;
 
-    this.pf = null;
-    this.pt = null;
+    this.propertiesFrom = null;
+    this.propertiesTo = null;
     this.ease = linear;
 
     this.onStart = null;
@@ -55,12 +55,12 @@ export default class Tween {
   _getLastParam(field) {
     var ref = this.last.prev;
     while (ref) {
-      if (ref.obj === this.obj && ref.pt && ref.pt[field] !== undefined && ref.pt[field] !== null) {
+      if (ref.obj === this.obj && ref.propertiesTo && ref.propertiesTo[field] !== undefined && ref.propertiesTo[field] !== null) {
         break;
       }
       ref = ref.prev;
     }
-    var v = ref ? ref.pt[field] : this.obj[field];
+    var v = ref ? ref.propertiesTo[field] : this.obj[field];
     return v;
   }
 
@@ -71,28 +71,28 @@ export default class Tween {
 
   from(props, duration, ease) {
     var tween = this._getTween(this.obj, duration, ease, 'from');
-    tween.pf = props;
-    tween.pt = {};
+    tween.propertiesFrom = props;
+    tween.propertiesTo = {};
     for (var f in props) {
-      tween.pt[f] = this._getLastParam(f);
+      tween.propertiesTo[f] = this._getLastParam(f);
     }
     return this;
   }
 
   to(props, duration, ease) {
     var tween = this._getTween(this.obj, duration, ease, 'to');
-    tween.pt = props;
-    tween.pf = {};
+    tween.propertiesTo = props;
+    tween.propertiesFrom = {};
     for (var f in props) {
-      tween.pf[f] = this._getLastParam(f);
+      tween.propertiesFrom[f] = this._getLastParam(f);
     }
     return this;
   }
 
   wait(duration) {
     var tween = this._getTween(this.obj, duration, null, 'wait');
-    tween.pf = tween.prev.pf;
-    tween.pt = tween.prev.pt;
+    tween.propertiesFrom = tween.prev.propertiesFrom;
+    tween.propertiesTo = tween.prev.propertiesTo;
     return this;
   }
 
@@ -194,17 +194,17 @@ export default class Tween {
 
     var ratio = this.ease(time/this.duration);
 
-    for (var f in this.pt) {
+    for (var f in this.propertiesTo) {
       switch (ratio) {
         case 0 :
-          this.obj[f] = this.pf[f];
+          this.obj[f] = this.propertiesFrom[f];
         break;
         case 1 :
-          this.obj[f] = this.pt[f];
+          this.obj[f] = this.propertiesTo[f];
         break;
         default :
-          var vf = this.pf[f];
-          var vt = this.pt[f];
+          var vf = this.propertiesFrom[f];
+          var vt = this.propertiesTo[f];
           this.obj[f] = vf + (vt - vf)*ratio;
         break;
       }
@@ -248,8 +248,8 @@ export default class Tween {
     this.next = null;
     this.prev = null;
     this.last = null;
-    this.pf = null;
-    this.pt = null;
+    this.propertiesFrom = null;
+    this.propertiesTo = null;
     this.onStart = null;
     this.onComplete = null;
   }

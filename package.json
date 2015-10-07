@@ -1,7 +1,7 @@
 {
   "name": "tweener",
-  "version": "0.1.24",
-  "description": "Just a minimal tween library.",
+  "version": "0.1.27",
+  "description": "Minimal Tweening Library for Games.",
   "author": "Mauro de Tarso <maurodetarso@gmail.com>",
   "contributors": [
     "Endel Dreyer <endel.dreyer@gmail.com>"
@@ -15,13 +15,15 @@
     "doc": "docs"
   },
   "scripts": {
+    "server": "http-server -p 8933",
     "dist-debug": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -d",
     "dist-release": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
     "dist": "npm run dist-debug & npm run dist-release",
-    "start": "watchify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
+    "start": "npm run server & watchify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
     "test": "mocha tests",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs",
-    "jsdoc": "jsdoc ./source/Tweener.js"
+    "jsdoc": "jsdoc ./source/Tweener.js",
+    "prepublish": "npm run dist-release"
   },
   "license": "MIT",
   "dependencies": {
@@ -34,6 +36,7 @@
     "jsdoc": "^3.2.2",
     "mocha": "^2.2.4",
     "uglify-js": "^2.4.19",
-    "watchify": "^3.1.0"
+    "watchify": "^3.1.0",
+    "http-server": "^0.8.0"
   }
 }

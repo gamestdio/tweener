@@ -1,7 +1,6 @@
-#Tweener 0.1 [![Build Status](https://secure.travis-ci.org/maurodetarso/tweener.png?branch=master)](https://travis-ci.org/maurodetarso/tweener)
+#tweener [![Build Status](https://secure.travis-ci.org/maurodetarso/tweener.png?branch=master)](https://travis-ci.org/maurodetarso/tweener)
 
-Just a minimal tween library.
-Work in progress.
+Minimal Tweening Library for Games.
 
 ## Usage ##
 
