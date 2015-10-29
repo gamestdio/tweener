@@ -69,7 +69,7 @@ export default class Tween {
     return tween;
   }
 
-  from(props, duration, ease) {
+  from(props, duration = 1, ease = linear) {
     var tween = this._getTween(this.obj, duration, ease, 'from');
     tween.propertiesFrom = props;
     tween.propertiesTo = {};
@@ -79,7 +79,7 @@ export default class Tween {
     return this;
   }
 
-  to(props, duration, ease) {
+  to(props, duration = 1, ease = linear) {
     var tween = this._getTween(this.obj, duration, ease, 'to');
     tween.propertiesTo = props;
     tween.propertiesFrom = {};
