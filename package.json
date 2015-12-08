@@ -19,7 +19,7 @@
     "dist-release": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
     "dist": "npm run dist-debug & npm run dist-release",
     "start": "watchify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
-    "test": "mocha tests",
+    "test": "mocha --compilers js:babel-register",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs",
     "jsdoc": "jsdoc ./source/Tweener.js"
   },
@@ -28,6 +28,8 @@
     "eases": "^1.0.6"
   },
   "devDependencies": {
+    "babel-cli": "^6.3.15",
+    "babel-preset-es2015": "^6.3.13",
     "babelify": "^6.0.2",
     "browserify": "^10.1.2",
     "chai": "^2.3.0",

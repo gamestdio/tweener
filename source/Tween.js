@@ -1,286 +1,99 @@
-import {linear} from 'eases';
-
-const UNDEFINED = 0;
-const BEFORE = 1;
-const RUNNING = 2;
-const AFTER = 3;
-
 export default class Tween {
-  constructor(obj, debug = false, name = '') {
-    this.name = name;
-    this.debug = debug;
-    this.obj = obj;
-
-    this.position = 0;
-    this.duration = 0;
-    this.state = 0;
-
-    this.next = null;
-    this.prev = null;
-    this.last = this;
-
-    this.time = 0;
-    this.lastEvaluationTime = -1;
-
-    this.pf = null;
-    this.pt = null;
-    this.ease = linear;
-
-    this.onStart = null;
-    this.onComplete = null;
-
-    if (this.debug) {
-      this.log('created');
-    }
+  constructor(ref = null) {
+    this._ref = ref;
+    this._lastState = ref;
+    this._target = ref;
+    this._queue = [];
+    this._length = 0;
+    this._current = 0;
   }
 
-  _getTween(obj, duration, ease, name = '') {
-    var last = this.last;
-    var tween = new Tween(obj, this.debug, name);
-    tween.position = last.position + last.duration;
-    tween.duration = duration || 0;
-    tween.state = 0;
-    tween.ease = ease;
-    tween.prev = last;
-    last.next = tween;
-    this.last = tween;
-
-    if (this.debug) {
-      this.log('added: ' + name);
-    }
-
-    return tween;
+  _getParams(tgt = this._target, dur = 0, ez = null) {
+    var params = {
+      tgt: tgt,
+      dur: dur,
+      pos: 0,
+      ez: ez,
+      fr: null,
+      to: null,
+      cb: null
+    };
+    this._queue[this._length] = params;
+    this._length += 1;
+    return params;
   }
 
-  _getLastParam(field) {
-    var ref = this.last.prev;
-    while (ref) {
-      if (ref.obj === this.obj && ref.pt && ref.pt[field] !== undefined && ref.pt[field] !== null) {
-        break;
-      }
-      ref = ref.prev;
+  _copy(src, fields) {
+    var o = {};
+    for (var f in fields) {
+      o[f] = src[f];
     }
-    var v = ref ? ref.pt[field] : this.obj[field];
-    return v;
+    return o;
   }
 
-  add(obj) {
-    var tween = this._getTween(obj, 0, linear);
-    return tween;
-  }
-
-  from(props, duration, ease) {
-    var tween = this._getTween(this.obj, duration, ease, 'from');
-    tween.pf = props;
-    tween.pt = {};
-    for (var f in props) {
-      tween.pt[f] = this._getLastParam(f);
-    }
+  add(target) {
+    this._target = target;
+    this._lastState = target;
     return this;
   }
 
   to(props, duration, ease) {
-    var tween = this._getTween(this.obj, duration, ease, 'to');
-    tween.pt = props;
-    tween.pf = {};
-    for (var f in props) {
-      tween.pf[f] = this._getLastParam(f);
-    }
+    var p = this._getParams(this._target, duration, ease);
+    p.fr = this._copy(this._lastState, props);
+    p.to = props;
+    this._lastState = props;
+    return this;
+  }
+
+  from(props, duration, ease) {
+    var p = this._getParams(this._target, duration, ease);
+    p.fr = props;
+    p.to = this._copy(this._lastState, props);
     return this;
   }
 
   wait(duration) {
-    var tween = this._getTween(this.obj, duration, null, 'wait');
-    tween.pf = tween.prev.pf;
-    tween.pt = tween.prev.pt;
+    var p = this._getParams();
+    p.dur = duration;
     return this;
   }
 
-  then(callback) {
-    this.last.onComplete = callback;
+  then(fn) {
+    var p = this._queue[this._length - 1];
+    p.cb = fn;
     return this;
-  }
-
-  setTime(value) {
-    var delta = value - this.time;
-    this.update(delta);
-  }
-
-  getTime() {
-    return this.time;
   }
 
   update(delta) {
-    if (delta) {
-      this.time += delta;
+    var p = this._queue[this._current];
+    var r = 1;
+    var complete = false;
+
+    p.pos += delta;
+
+    if (p.dur > 0 && p.pos < p.dur) {
+      r = p.ez ? p.ez(p.pos/p.dur) : p.pos/p.dur;
     }
 
-    if (this.next && delta < 0) {
-      this.next.update(delta);
-    }
-
-    if (this.time !== this.lastEvaluationTime) {
-      var time = this.time;
-      var pos = this.position;
-      var dur = this.duration;
-      var lastState = this.state;
-      var state = Tween.getState(pos, dur, time);
-
-      if (lastState === UNDEFINED) {
-        if (time > this.lastEvaluationTime) {
-          switch (state) {
-            case RUNNING :
-              this.notifyStart();
-              this.process(time - pos);
-            break;
-            case AFTER :
-              this.notifyStart();
-              this.process(dur);
-              this.notifyComplete();
-            break;
-          }
-        } else {
-          switch (state) {
-            case RUNNING :
-              this.notifyComplete();
-              this.process(time - pos);
-            break;
-            case BEFORE :
-              this.notifyComplete();
-              this.process(0);
-              this.notifyStart();
-            break;
-          }
-        }
-      } else {
-        switch (state) {
-          case BEFORE :
-            if (lastState !== BEFORE) {
-              this.process(0);
-              this.notifyStart();
-            }
-          break;
-          case RUNNING :
-            if (lastState === BEFORE) {
-              this.notifyStart();
-            } else if (lastState === AFTER) {
-              this.notifyComplete();
-            }
-            this.process(time - pos);
-          break;
-          case AFTER :
-            if (lastState !== AFTER) {
-              this.process(dur);
-              this.notifyComplete();
-            }
-          break;
-        }
-      }
-
-      this.lastEvaluationTime = time;
-      this.state = state;
-    }
-
-
-    if (this.next && delta > 0) {
-      this.next.update(delta);
-    }
-  }
-
-  process(time) {
-    if (!this.ease || this.duration === 0) {
-      return;
-    }
-
-    var ratio = this.ease(time/this.duration);
-
-    for (var f in this.pt) {
-      switch (ratio) {
-        case 0 :
-          this.obj[f] = this.pf[f];
-        break;
-        case 1 :
-          this.obj[f] = this.pt[f];
-        break;
-        default :
-          var vf = this.pf[f];
-          var vt = this.pt[f];
-          this.obj[f] = vf + (vt - vf)*ratio;
-        break;
+    if (p.to && p.tgt) {
+      for (var f in p.to) {
+        var vf = p.fr[f];
+        var vt = p.to[f];
+        p.tgt[f] = vf + (vt - vf)*r;
       }
     }
-  }
 
-  notifyStart() {
-    if (this.debug) {
-      this.log('start');
-    }
-    if (this.onStart) {
-      this.onStart();
-    }
-  }
+    if (r >= 1) {
+      if (p.cb) {
+        p.cb();
+      }
 
-  notifyComplete() {
-    if (this.debug) {
-      this.log('complete');
-    }
-    if (this.onComplete) {
-      this.onComplete();
-    }
-  }
-
-  finished() {
-    var r = this.state === AFTER;
-    if (r && this.next) {
-      r = this.next.finished();
-    }
-    return r;
-  }
-
-  dispose() {
-    if (this.next) {
-      this.next.dispose();
-    }
-    if (this.debug) {
-      this.log('DISPOSED!');
-    }
-    this.obj = null;
-    this.next = null;
-    this.prev = null;
-    this.last = null;
-    this.pf = null;
-    this.pt = null;
-    this.onStart = null;
-    this.onComplete = null;
-  }
-
-  log(msg) {
-    if (this.debug) {
-      if (this.obj.name) {
-        console.log('[Tween]', this.obj.name, this.name, msg);
-      } else if (this.name) {
-        console.log('[Tween]', this.name, msg);
-      } else {
-        console.log('[Tween]', msg);
+      this._current += 1;
+      if (this._current >= this._length) {
+        complete = true;
       }
     }
-  }
 
-  static getState(pos, dur, time) {
-    var end = pos + dur;
-    var state = UNDEFINED;
-    if (time < pos) {
-      state = BEFORE;
-    } else if (time >= end) {
-      state = AFTER;
-    } else {
-      state = RUNNING;
-    }
-    return state;
+    return complete;
   }
 }
-
-Tween.UNDEFINED = UNDEFINED;
-Tween.BEFORE = BEFORE;
-Tween.RUNNING = RUNNING;
-Tween.AFTER = AFTER;

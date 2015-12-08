@@ -1,52 +1,38 @@
 import Tween from './Tween';
-import eases from 'eases';
 
 export default class Tweener {
   constructor(autoUpdateRate = 0) {
     this.debug = false;
     this.tweens = [];
-    this._autoUpdateRate = 0;
     this._interval = null;
-    this.autoUpdateRate = autoUpdateRate;
+    this.setAutoUpdateRate(autoUpdateRate);
   }
 
   dispose() {
     clearInterval(this._interval);
     this.autoUpdateRate = 0;
-    var i = this.tweens.length;
-    while (i--) {
-      var t = this.tweens[i];
-      if (t) {
-        t.dispose();
-      }
-    }
     this.tweens = null;
   }
 
-  get autoUpdateRate() {
-    return this._autoUpdateRate;
-  }
-
-  set autoUpdateRate(value) {
+  setAutoUpdateRate(value) {
     clearInterval(this._interval);
     if (value <= 0) {
       this._interval = null;
-      this._autoUpdateRate = 0;
     } else {
-      this._autoUpdateRate = value;
-      var self = this;
-      var time = self.getTime();
-      self._interval = setInterval(function() {
-        var t = self.getTime();
-        var d = t - time;
-        time = t;
-        self.update(d);
-      }, value*1000);
+      this._time = this.getTime();
+      this._interval = setInterval(this._autoUpdate.bind(this), value*1000);
     }
   }
 
-  add(obj, debug = false, name = '') {
-    var tween = new Tween(obj, debug, name);
+  _autoUpdate() {
+    var t = this.getTime();
+    var d = t - this._time;
+    this._time = t;
+    this.update(d);
+  }
+
+  add(obj) {
+    var tween = new Tween(obj);
     this.tweens.push(tween);
     return tween;
   }
@@ -55,9 +41,8 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      if (t.obj === obj) {
+      if (t._reference === obj) {
         this.tweens.splice(i, 1);
-        t.dispose();
       }
     }
   }
@@ -66,13 +51,8 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      if (t) {
-        if (t.finished()) {
-          this.tweens.splice(i, 1);
-          t.dispose();
-        } else {
-          t.update(delta);
-        }
+      if (t.update(delta)) {
+        this.tweens.splice(i, 1);
       }
     }
   }
@@ -81,6 +61,3 @@ export default class Tweener {
     return new Date().getTime()/1000;
   }
 }
-
-Tweener.Tween = Tween;
-Tweener.ease = eases;

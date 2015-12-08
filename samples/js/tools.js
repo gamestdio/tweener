@@ -1,5 +1,5 @@
 
-var Canvas = function(id) {
+var DummyCanvas = function(id) {
   var canvas = document.getElementById(id);
   var ctx = canvas.getContext("2d");
   var rects = [];
