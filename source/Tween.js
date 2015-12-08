@@ -73,7 +73,7 @@ export default class Tween {
 
     if (p.dur > 0 && p.pos < p.dur) {
       r = p.ez ? p.ez(p.pos/p.dur) : p.pos/p.dur;
-    }
+    } 
 
     if (p.to && p.tgt) {
       for (var f in p.to) {
@@ -83,7 +83,7 @@ export default class Tween {
       }
     }
 
-    if (r >= 1) {
+    if (p.pos >= p.dur) {
       if (p.cb) {
         p.cb();
       }

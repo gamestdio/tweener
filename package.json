@@ -15,9 +15,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "dist-debug": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -d",
-    "dist-release": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
-    "dist": "npm run dist-debug & npm run dist-release",
+    "dist-dev": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -d",
+    "dist-min": "browserify source/index.js -s Tweener -t [ babelify --stage 0 ] | uglifyjs -mc > dist/tweener.min.js",
+    "dist-ease": "browserify source/ease.js -s Ease -t [ babelify --stage 0 ] | uglifyjs -mc > dist/ease.min.js",
+    "dist": "npm run dist-dev & npm run dist-min & npm run dist-ease",
     "start": "watchify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
     "test": "mocha --compilers js:babel-register",
     "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs",
