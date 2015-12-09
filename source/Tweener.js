@@ -10,15 +10,15 @@ export default class Tweener {
 
   dispose() {
     clearInterval(this._interval);
-    this.autoUpdateRate = 0;
+    this._interval = null;
     this.tweens = null;
   }
 
   setAutoUpdateRate(value) {
     clearInterval(this._interval);
-    if (value <= 0) {
-      this._interval = null;
-    } else {
+    this._interval = null;
+
+    if (value > 0) {
       this._time = this.getTime();
       this._interval = setInterval(this._autoUpdate.bind(this), value*1000);
     }
@@ -41,7 +41,7 @@ export default class Tweener {
     var i = this.tweens.length;
     while (i--) {
       var t = this.tweens[i];
-      if (t._reference === obj) {
+      if (t._ref === obj) {
         this.tweens.splice(i, 1);
       }
     }

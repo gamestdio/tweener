@@ -1,13 +1,11 @@
-if (typeof(window) === 'object') {
-  var assert = chai.assert;
-} else {
-  var assert = require('chai').assert;
-  var Tweener = require('../dist/tweener.js');
-}
+'use strict'
 
-function updateTweener(tweener, steps, delta) {
+import {assert} from 'chai';
+import Tweener from '../source/Tweener';
+
+function updateTweener(tweener, times, delta) {
   delta = delta === undefined ? 1 : delta;
-  for (var i = 0; i < steps; i++) {
+  for (var i = 0; i < times; i++) {
     tweener.update(delta);
   }
 }
@@ -22,7 +20,7 @@ describe('Tweener', function(){
       var tweener = new Tweener(1);
       assert.equal(tweener.constructor.name, 'Tweener');
       assert.notEqual(tweener._interval, null);
-      tweener.autoUpdateRate = 0;
+      tweener.setAutoUpdateRate(0);
       assert.equal(tweener._interval, null);
     });
   });
@@ -37,22 +35,20 @@ describe('Tweener', function(){
     it('should clear a Tweener instance with auto-update', function(){
       var tweener = new Tweener(1/60);
       tweener.dispose();
-      assert.equal(tweener.tweens, null);
       assert.equal(tweener._interval, null);
+      assert.equal(tweener.tweens, null);
     });
   });
 
-  describe('#get/set autoUpdateRate()', function(){
+  describe('#setAutoUpdateRate()', function(){
     var tweener = new Tweener();
     it('should enable auto-update', function(){
-      tweener.autoUpdateRate = 60;
-      assert.equal(tweener.autoUpdateRate, 60);
+      tweener.setAutoUpdateRate(60);
       assert.notEqual(tweener._interval, null);
     });
 
     it('should cancel auto-update', function(){
-      tweener.autoUpdateRate = 0;
-      assert.equal(tweener.autoUpdateRate, 0);
+      tweener.setAutoUpdateRate(0);
       assert.equal(tweener._interval, null);
     });
   });
@@ -62,19 +58,19 @@ describe('Tweener', function(){
     var objB = {x: 0, y: 0};
     var tweener = new Tweener();
 
-    it('should add a Tween instance with passed obj', function(){
+    it('should add a Tween instance with given target', function(){
       var tweenA = tweener.add(objA);
       assert.equal(tweenA.constructor.name, 'Tween');
       assert.equal(tweener.tweens[0], tweenA);
-      assert.equal(tweener.tweens[0].obj, objA);
+      assert.equal(tweener.tweens[0]._target, objA);
       assert.equal(tweener.tweens.length, 1);
     });
 
-    it('should add another Tween instance with passed obj', function(){
+    it('should add another Tween instance with given target', function(){
       var tweenB = tweener.add(objB);
       assert.equal(tweenB.constructor.name, 'Tween');
       assert.equal(tweener.tweens[1], tweenB);
-      assert.equal(tweener.tweens[1].obj, objB);
+      assert.equal(tweener.tweens[1]._target, objB);
       assert.equal(tweener.tweens.length, 2);
     });
   });
@@ -102,7 +98,7 @@ describe('Tweener', function(){
       assert.equal(tweener.tweens.length, 0);
     });
 
-    it('should remove nothing', function(){
+    it('should remove anything', function(){
       var tweenB = tweener.add(objB);
       tweener.remove(objA);
       assert.equal(tweener.tweens[0], tweenB);
@@ -123,8 +119,8 @@ describe('Tweener', function(){
     it('should update added tweens', function(){
       tweener.add(objA);
       tweener.update(1);
-      assert.equal(tweener.tweens[0].obj, objA);
-      assert.equal(tweener.tweens.length, 1);
+      assert.equal(tweener.tweens.length, 0);
+      assert.equal(tweener.tweens[0], undefined);
     });
 
     it('should update and remove finished tweens', function(){
@@ -135,29 +131,4 @@ describe('Tweener', function(){
       assert.equal(tweener.tweens.length, 0);
     });
   });
-
-  describe('#dispose()', function(){
-    var objA = {x: 0, y: 0};
-    var objB = {x: 0, y: 0};
-
-    it('should dispose correctly', function(){
-      var tweener = new Tweener(1/60);
-      tweener.dispose();
-      assert.equal(tweener.tweens, null);
-      assert.equal(tweener._interval, null);
-    });
-
-    it('should dispose all internal tweens', function(){
-      var tweener = new Tweener();
-      var tweenA = tweener.add(objA);
-      var tweenB = tweener.add(objB);
-      tweener.dispose();
-      assert.equal(tweener.tweens, null);
-      assert.equal(tweener._interval, null);
-      assert.equal(tweenA.obj, null);
-      assert.equal(tweenB.obj, null);
-    });
-  });
-
-
 });

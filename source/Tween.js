@@ -66,6 +66,11 @@ export default class Tween {
 
   update(delta) {
     var p = this._queue[this._current];
+
+    if (!p) {
+      return true;
+    }
+
     var r = 1;
     var complete = false;
 
@@ -73,7 +78,7 @@ export default class Tween {
 
     if (p.dur > 0 && p.pos < p.dur) {
       r = p.ez ? p.ez(p.pos/p.dur) : p.pos/p.dur;
-    } 
+    }
 
     if (p.to && p.tgt) {
       for (var f in p.to) {
