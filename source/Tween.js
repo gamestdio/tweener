@@ -23,10 +23,10 @@ export default class Tween {
     return params;
   }
 
-  _copy(src, fields) {
+  _getProps(src, fields) {
     var o = {};
     for (var f in fields) {
-      o[f] = src[f];
+      o[f] = src[f] !== undefined ? src[f] : this._target[f];
     }
     return o;
   }
@@ -39,7 +39,7 @@ export default class Tween {
 
   to(props, duration, ease) {
     var p = this._getParams(this._target, duration, ease);
-    p.fr = this._copy(this._lastState, props);
+    p.fr = this._getProps(this._lastState, props);
     p.to = props;
     this._lastState = props;
     return this;
@@ -48,7 +48,7 @@ export default class Tween {
   from(props, duration, ease) {
     var p = this._getParams(this._target, duration, ease);
     p.fr = props;
-    p.to = this._copy(this._lastState, props);
+    p.to = this._getProps(this._lastState, props);
     return this;
   }
 
@@ -60,7 +60,11 @@ export default class Tween {
 
   then(fn) {
     var p = this._queue[this._length - 1];
-    p.cb = fn;
+    if (p) {
+      p.cb = fn;
+    } else {
+      fn();
+    }
     return this;
   }
 
