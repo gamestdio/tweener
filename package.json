@@ -10,17 +10,18 @@
     "type": "git",
     "url": "git://github.com/maurodetarso/tweener.git"
   },
-  "main": "dist/tweener.min.js",
+  "main": "tweener.min.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "dist-dev": "browserify source/index.js -s Tweener -t babelify -o dist/tweener.js -d",
-    "dist-min": "browserify source/index.js -s Tweener -t babelify | uglifyjs -mc > dist/tweener.min.js",
-    "dist": "npm run dist-dev & npm run dist-min",
-    "start": "watchify source/index.js -s Tweener -t babelify -o dist/tweener.js -dv",
+    "start": "watchify source/index.js -s Tweener -t babelify -o tweener.js -dv",
     "test": "mocha --compilers js:babel-core/register --es_staging -b",
-    "docs": "esdoc -c esdoc.json"
+    "dist-dev": "browserify source/index.js -s Tweener -t babelify -o tweener.js -d",
+    "dist-min": "browserify source/index.js -s Tweener -t babelify | uglifyjs -mc > tweener.min.js",
+    "dist": "npm run dist-dev & npm run dist-min",
+    "docs": "esdoc -c esdoc.json",
+    "prepublish": "npm run dist-min"
   },
   "license": "MIT",
   "dependencies": {
