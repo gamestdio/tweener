@@ -15,14 +15,12 @@
     "doc": "docs"
   },
   "scripts": {
-    "dist-dev": "browserify source/index.js -s Tweener -t [babelify] -o dist/tweener.js -d",
-    "dist-min": "browserify source/index.js -s Tweener -t [babelify] | uglifyjs -mc > dist/tweener.min.js",
-    "dist-ease": "browserify source/ease.js -s Ease -t [babelify] | uglifyjs -mc > dist/ease.min.js",
-    "dist": "npm run dist-dev & npm run dist-min & npm run dist-ease",
-    "start": "watchify source/index.js -s Tweener -t [ babelify --stage 0 ] -o dist/tweener.js -dv",
+    "dist-dev": "browserify source/index.js -s Tweener -t babelify -o dist/tweener.js -d",
+    "dist-min": "browserify source/index.js -s Tweener -t babelify | uglifyjs -mc > dist/tweener.min.js",
+    "dist": "npm run dist-dev & npm run dist-min",
+    "start": "watchify source/index.js -s Tweener -t babelify -o dist/tweener.js -dv",
     "test": "mocha --compilers js:babel-core/register --es_staging -b",
-    "docs": "jsdoc -c ./docs-config.json -R ./README.md -d ./docs",
-    "jsdoc": "jsdoc ./source/Tweener.js"
+    "docs": "esdoc -c esdoc.json"
   },
   "license": "MIT",
   "dependencies": {
@@ -33,10 +31,10 @@
     "babel-cli": "^6.3.15",
     "babel-core": "^6.3.15",
     "babel-preset-es2015": "^6.3.13",
-    "babelify": "^6.0.2",
+    "babelify": "^7.2.0",
     "browserify": "^10.1.2",
     "chai": "^3.4.1",
-    "jsdoc": "^3.2.2",
+    "esdoc": "^0.4.3",
     "mocha": "^2.3.4",
     "uglify-js": "^2.4.19",
     "watchify": "^3.1.0"

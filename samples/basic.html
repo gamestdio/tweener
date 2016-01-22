@@ -3,7 +3,6 @@
 	<title>Basic - Tweener</title>
 	<script type="text/javascript" src="js/tools.js"></script>
 	<script type="text/javascript" src="../dist/tweener.js"></script>
-	<script type="text/javascript" src="../dist/ease.min.js"></script>
 	<style media="screen">
 		canvas {
 			background-color: black;
@@ -22,18 +21,18 @@
   var startTime = tweener.getTime();
 
   tweener.add(boxA)
-    .from({x:600}, 0.5, Ease.quartOut)
-    .to({x:250}, 0.5, Ease.quartOut)
-    .from({x:0}, 0.5, Ease.quartOut)
-    .to({x:0}, 0.5, Ease.quartOut)
+    .from({x:600}, 0.5, Tweener.ease.quartOut)
+    .to({x:250}, 0.5, Tweener.ease.quartOut)
+    .from({x:0}, 0.5, Tweener.ease.quartOut)
+    .to({x:0}, 0.5, Tweener.ease.quartOut)
     .then(function() {
       console.log('finish a');
     });
 
   tweener.add(boxB)
-    .to({y:100}, 0.5, Ease.quartOut)
+    .to({y:100}, 0.5, Tweener.ease.quartOut)
     .wait(0.2)
-    .to({y:250}, 1.5, Ease.elasticOut)
+    .to({y:250}, 1.5, Tweener.ease.elasticOut)
     .then(function() {
       console.log('finish b');
     });

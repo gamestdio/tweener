@@ -5,7 +5,6 @@
 .gitignore
 .jshintrc
 bower.json
-docs-config.json
 tests.html
 tests
 samples
