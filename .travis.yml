@@ -7,4 +7,4 @@ before_script:
   - npm install
 
 script:
-  - ./node_modules/mocha/bin/mocha test
+  - ./node_modules/mocha/bin/mocha --compilers js:babel-core/register --es_staging -b
