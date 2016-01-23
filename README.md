@@ -1,12 +1,27 @@
-#Tweener 0.1 [![Build Status](https://secure.travis-ci.org/maurodetarso/tweener.png?branch=master)](https://travis-ci.org/maurodetarso/tweener)
+# Tweener 0.1
 
-Just a minimal tween library.
-Work in progress.
+[![Build Status](https://secure.travis-ci.org/gamestdio/tweener.png?branch=master)](https://travis-ci.org/gamestdio/tweener)
 
-## Usage ##
+A minimal tween library written in ES6 JavaScript.
 
+##### Chaining
+  Heavily inspired on [Grant Skinner's TweenJS](http://www.createjs.com/tweenjs) - which is easy and really good to make sequences.
+##### Instantiable
+  It's not a singleton, so you can have more instances running easily
+##### Manual update
+  You can manage updates and time steps by your own, useful for gaming development.
+##### Minimal
+  No DOM or CSS stuff. Deal with numbers and anything else.
+
+## Usage
+
+##### Install
 ```javascript
-// Tweener is not singleton. You need to create the instance.
+npm install tweener
+```
+
+##### Basics
+```javascript
 // Creating a Tweener instance with auto-update of 60 ticks per second:
 var tweener = new Tweener(1/60);
 
@@ -17,7 +32,7 @@ tweener.add(target).to({x:300, y:200}, 2, Tweener.ease.backOut);
 tweener.remove(target);
 ```
 
-#### CHAINING ####
+##### Chaining
 ```javascript
 // Dispatching a callback after completion:
 tweener.add(target).from({x:300, y:200}, 2, Tweener.ease.elasticOut).then(method);
@@ -35,9 +50,8 @@ tweener.add(target).to({x:300}, 2, Tweener.ease.sineOut).to({x:0}, 2, Tweener.ea
 tweener.add(targetA).to({x:300}, 2, Tweener.ease.sineOut).add(targetB).to({x:300}, 2, Tweener.ease.sineOut);
 ```
 
-#### MANUAL UPDATE ####
+##### Manual update
 ```javascript
-
 // You can create Tweener instances without auto-update:
 var tweenerA = new Tweener();
 var tweenerB = new Tweener();
@@ -51,7 +65,14 @@ tweenerA.add(targetA).to({x:300, y:200}, 0.5, Tweener.ease.backOut); //seconds
 tweenerB.add(targetB).to({x:300, y:200}, 500, Tweener.ease.backOut); //milliseconds
 ```
 
-## Easing functions ##
+##### Development
+- Requires Node 5.2
+- `npm install`
+- Develop: `npm start`
+- Release: `npm run dist`
+- See `package.json` for more info.
+
+## Easing functions
 
 Here is the list of available easing functions (thanks to [@mattdesl](https://github.com/mattdesl) for his [eases](https://github.com/mattdesl/eases) package):
 
