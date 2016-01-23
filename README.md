@@ -2,16 +2,16 @@
 
 [![Build Status](https://secure.travis-ci.org/gamestdio/tweener.png?branch=master)](https://travis-ci.org/gamestdio/tweener)
 
-A minimal tween library written in ES6 JavaScript.
+A minimal tweening library written in ES6 JavaScript.
 
 ##### Chaining
   Heavily inspired on [Grant Skinner's TweenJS](http://www.createjs.com/tweenjs) - which is easy and really good to make sequences.
-##### Instantiable
-  It's not a singleton, so you can have more instances running easily
 ##### Manual update
-  You can manage updates and time steps by your own, useful for gaming development.
+  You can manage updates and time steps by your own, useful for game development.
 ##### Minimal
-  No DOM or CSS stuff. Deal with numbers and anything else.
+  No DOM or CSS stuff. Deals only with numbers.
+##### Not singleton
+  That's it!
 
 ## Usage
 
