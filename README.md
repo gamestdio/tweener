@@ -1,4 +1,4 @@
-# Tweener 0.1
+# Tweener
 
 [![Build Status](https://secure.travis-ci.org/gamestdio/tweener.png?branch=master)](https://travis-ci.org/gamestdio/tweener)
 
