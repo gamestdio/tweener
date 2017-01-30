@@ -1,5 +1,7 @@
 # Tweener
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/gamestdio/tweener.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://secure.travis-ci.org/gamestdio/tweener.png?branch=master)](https://travis-ci.org/gamestdio/tweener)
 
 A minimal tweening library written in ES6 JavaScript.
